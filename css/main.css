@@ -1,0 +1,77 @@
+.header-class{
+	color:#08c
+}
+
+#div_headerOptions{
+	display: inline-block;
+	float: right
+}
+
+.btnSimple{
+	background: #249fda;
+	font-size: 12px;	
+	border:0px solid white
+}
+
+body{
+	font-family: Georgia
+}
+
+#div_loginPanel{
+	box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);
+	background: white
+}
+
+#h1_loginHeader{
+	color: #2a637d
+}
+
+#btn_resetLogin{
+	background: #f37822
+}
+
+.logo_container_class{
+	color: #08c;
+	text-align: center;
+	margin-bottom: 12px;
+	background: white;
+	//padding: 6px;
+	//box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);
+}
+
+.logo-class{
+	font-size: 90px	
+}
+
+.logo-title, .logo-description{
+	color: #2a637d;
+	font-family: Cambria;
+}
+
+.logo-description{
+	font-size: 14px;
+	font-family: Cambria;
+}
+
+.logo-title{
+	//background: rgba(0,0,0,0.15);
+	padding: 6px;
+	padding-top: 0px;
+}
+
+.rowClass{
+	padding: 12px;
+}
+
+.logo-content{
+	//background: #FAFCFB;
+	padding-top: 6px;
+	padding-top: 6px;
+	//box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);
+	//width: 99.9%;
+	border-radius: 3%;
+}
+
+.logo_container_class:hover{
+	background: : yellow;
+}

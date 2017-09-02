@@ -1,0 +1,49 @@
+textarea{ 
+	resize: none;
+}
+
+label{
+	margin-top: 12px;
+}
+
+#spnStatus{
+	margin: 15px;
+	margin-top: 30px;
+}
+
+#lblMessage{
+	font-size: 11.5px;
+	color: #D85C6F;
+	font-family: Cambria;
+	margin-top: 0px;
+	font-weight: bold;
+}
+
+.tblViewDetail{
+	font-size: 12px;
+	font-family: Arial
+}
+
+.tblViewDetail td{
+	font-size: 11.4px;
+	font-family: Arial
+}
+
+.spn_action_class:hover{
+	cursor: pointer;
+}
+
+.spn_delete_class{
+	color: red;
+	font-size: 12px;
+}
+
+.spn_edit_class{
+	color: blue;
+	font-size: 12px;
+}
+
+.spnDetails_class{
+	float: right;
+	color: #4cae4c;
+}

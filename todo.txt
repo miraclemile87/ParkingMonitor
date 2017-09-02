@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="css/ps_add_details.css">
+
+PS_PARKINGSPACE_GRID_ID = 1
+
+parking space icons
+
+menu hover
+
+tminuite and thour Class for 24:59
+
+role based menu
+
+use end date in all the queries
+
+update end date on delete
+
+use role id in the queries wherever possible
+
+country dropdown with flag
+
+show colors in tables for not linked
+
+edit and delete functionality
+
+notification
+
+ref if for next screen
+
+main column with different td color
+
+SELECT `BUILDING_NO`, ifnull(`BUILDING_PARKING_SLOTS_C`,0) - ifnull(`PARKING_COUNT_C`, 0) COMMON_PARKINGS, ifnull(`BUILDING_PARKING_SLOTS_F`, 0) - ifnull(`PARKING_COUNT_F`,0) FEMALE_PARKINGS FROM `ps_parkingspace_buildings` building LEFT OUTER join ps_parkingspace_building_parkings current on building.BUILDING_ID = current.BUILDING_ID and current.PARKING_BUSINESS_DATE = date(now()) and ((building.START_DATE >= date(now()) and building.END_DATE is null )or (date(now()) between building.start_date and building.END_DATE))
+
+https://github.com/hiiamrohit/Countries-States-Cities-database
+
+
+SELECT `BUILDING_NO`, `COMPANY_NAME`, CONCAT(city.name ,', ', state.name , ', ' , country.name) COMPANY_LOCATION, `COMPANY_LANDMARK`, ifnull(`BUILDING_PARKING_SLOTS_C`,0) COMMON_PARKINGS_TOTAL, ifnull(`BUILDING_PARKING_SLOTS_C`,0) - ifnull(`PARKING_COUNT_C`, 0) COMMON_PARKINGS_AVAILABLE, ifnull(`PARKING_COUNT_C`, 0) COMMON_PARKINGS_BOOKED, ifnull(`BUILDING_PARKING_SLOTS_F`, 0) FEMALE_PARKINGS_TOTAL, ifnull(`BUILDING_PARKING_SLOTS_F`, 0) - ifnull(`PARKING_COUNT_F`,0) FEMALE_PARKINGS_AVAILABLE, ifnull(`PARKING_COUNT_F`,0) FEMALE_PARKINGS_BOOKED FROM `ps_parkingspace_buildings` building join ps_parkingspace_companies_buildings comp_bldg on comp_bldg.BUILDING_ID = building.BUILDING_ID join ps_parkingspace_companies company on company.COMPANY_ID = comp_bldg.COMPANY_ID LEFT OUTER JOIN ps_cities city on city.id = company.company_city LEFT OUTER join ps_states state on state.id = company.COMPANY_STATE LEFT OUTER JOIN ps_countries country on country.id = company.COMPANY_COUNTRY LEFT OUTER join ps_parkingspace_building_parkings current on building.BUILDING_ID = current.BUILDING_ID and current.PARKING_BUSINESS_DATE = date(now()) and ((building.START_DATE >= date(now()) and building.END_DATE is null )or (date(now()) between building.start_date and building.END_DATE))  order by BUILDING_NO
