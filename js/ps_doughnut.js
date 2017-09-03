@@ -41,7 +41,7 @@ $(document).ready(function() {
 			success : function(data){
 				//console.log(data);
 
-				data = [{"company_ID":"1","building_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"30","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"120","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"40","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"25","FEMALE_PARKINGS_BOOKED":"0"}];
+				data = [{"company_ID":"1","building_ID":"1","COMPANY_BUILDING_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","COMPANY_BUILDING_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"30","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"3","COMPANY_BUILDING_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"120","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"40","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"4","COMPANY_BUILDING_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"25","FEMALE_PARKINGS_BOOKED":"0"}];
 
 				var dataLength = data.length;
 				
@@ -81,11 +81,11 @@ $(document).ready(function() {
 							//$("#doughnutCanvasContainer").append('<canvas id="' + data[itr].BUILDING_NO + '" width="400" height="400"></canvas>');
 
 							labelText.push("Building - " + data[itr].BUILDING_NO);
-							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].company_ID + "_" + data[itr].building_ID);
+							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
 							commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
 
 							if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
-								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].company_ID + "_" + data[itr].building_ID);
+								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
 								labelTextF.push("Building - " + data[itr].BUILDING_NO);
 								female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
 								backgroundColorValuesF.push(backgroundColorArray[itr]);
@@ -216,7 +216,7 @@ $(document).ready(function() {
 
 	function drawTable(commonTblTextVal, tblHandler){
 		//alert(commonTblTextF);
-		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th>Building</th><th>Total</th><th>Booked</th><th></th><th></th></tr></thead>";
+		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th>Building</th><th>Available</th><th>Booked</th><th></th><th></th></tr></thead>";
 		commonTblBodyText+="<tbody>";
 		commonTblBodyText+=commonTblTextVal;
 		commonTblBodyText+="</tbody>";
@@ -227,12 +227,132 @@ $(document).ready(function() {
 		$("#" + tblHandler).html(commonTblBodyText);
 
 		$(".addButtonClass").off('click').on('click',function(){
+			var tdChildren = $(this).parents("tr").children("td");
+
+			var availableParkingSpace = parseInt(tdChildren.eq(1).text());
+			var bookedParkingSpace = parseInt(tdChildren.eq(2).text());
+
+			var confirmMessage = "<strong>Current - <strong> Available: " + availableParkingSpace + " and Booked: " + bookedParkingSpace + "<h3>Book 1 parking space?</h3><string>Post Booking - </string>Available: " + (availableParkingSpace-1) + " and Booked: " + (bookedParkingSpace + 1);
+
+			var handlerId = $(this).prop('id');
+
+			var maleOrFemale = "M";
+
+			if($(this).parents("div").attr("id") == "doughnutDataTable")
+				maleOrFemale = "M"
+			else
+				maleOrFemale = "F";
+
+			bootbox.confirm({
+				message: confirmMessage,
+				buttons: {
+			        confirm: {
+			            label: 'Book',
+			            className: 'btn-success'
+			        },
+			        cancel: {
+			            label: 'Cancel',
+			            className: 'btn-warning'
+			        }
+			    },
+			    callback: function(result){
+			    	bookParkingSpace(result, handlerId, maleOrFemale);
+			    }
+			});
 			//alert($(this).attr("id"));
 		});
 
 		$(".delButtonClass").off('click').on('click',function(){
-			//alert($(this).attr("id"));
+			var tdChildren = $(this).parents("tr").children("td");
+
+			var availableParkingSpace = parseInt(tdChildren.eq(1).text());
+			var bookedParkingSpace = parseInt(tdChildren.eq(2).text());
+
+			var confirmMessage = "<strong>Current - <strong> Available: " + availableParkingSpace + " and Booked: " + bookedParkingSpace + "<h3>Free 1 parking space?</h3><string>Post Booking - </string>Available: " + (availableParkingSpace+1) + " and Booked: " + (bookedParkingSpace - 1);
+
+			var handlerId = $(this).prop('id');
+
+			var maleOrFemale = "M";
+
+			if($(this).parents("div").attr("id") == "doughnutDataTable")
+				maleOrFemale = "M"
+			else
+				maleOrFemale = "F";
+
+			bootbox.confirm({
+				message: confirmMessage,
+				buttons: {
+			        confirm: {
+			            label: 'Free',
+			            className: 'btn-success'
+			        },
+			        cancel: {
+			            label: 'Cancel',
+			            className: 'btn-warning'
+			        }
+			    },
+			    callback: function(result){
+			    	bookParkingSpace(result, handlerId, maleOrFemale);
+			    }
+			});
 		});
+
+		enableDisableButton();
 	}
+
+	function bookParkingSpace(result, btnHandlerValue, maleOrFemale){
+		if(result){
+			//alert(btnHandler);
+			//alert(btnHandler.val());
+
+			var handlerValue = btnHandlerValue;
+
+			$.ajax({
+				url : "ps_updateParkingData.php",
+				type : "POST",
+				data: "CMPNY_BLDG_ID="+handlerValue+"&mORf="+maleOrFemale+"&aORd=A",
+				success : function(htmldata){
+					//$("#selParking").html(htmldata);
+					alert("done " + htmldata);
+				},
+				error : function(data) {
+					//console.log(data);
+				}
+			});
+		}
+	}
+
+	function enableDisableButton(){
+		$(".delButtonClass").each(function(){
+			var tdChildren = $(this).parents("tr").children("td");
+
+			var availableParkingSpace = parseInt(tdChildren.eq(1).text());
+			var bookedParkingSpace = parseInt(tdChildren.eq(2).text());
+
+			if(bookedParkingSpace == 0){
+				$(this).attr('disabled','true');
+			}else{
+				$(this).removeAttr('disabled');
+			}
+
+		});	
+
+		$(".addButtonClass").each(function(){
+			var tdChildren = $(this).parents("tr").children("td");
+
+			var availableParkingSpace = parseInt(tdChildren.eq(1).text());
+			var bookedParkingSpace = parseInt(tdChildren.eq(2).text());
+
+			console.log(availableParkingSpace);
+
+			if(parseInt(availableParkingSpace) == 0){
+				$(this).attr('disabled','true');
+			}else{
+				$(this).removeAttr('disabled');
+			}
+
+		});	
+	}
+
 
 });

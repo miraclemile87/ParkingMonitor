@@ -27,6 +27,7 @@
 		<link rel="stylesheet" href="css/dashboard.css">
 		<link rel="stylesheet" href="css/main.css">
 		<script src="lib/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+		<script src="lib/bootbox.min.js"></script>
 		<script src="js/ps_doughnut.js"></script>
 		<script src="js/ps_company_data.js"></script>
 	</head>
