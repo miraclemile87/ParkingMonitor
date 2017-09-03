@@ -28,6 +28,7 @@
 		<link rel="stylesheet" href="css/main.css">
 		<script src="lib/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 		<script src="js/ps_doughnut.js"></script>
+		<script src="js/ps_company_data.js"></script>
 	</head>
 	<body>
 		<?php
@@ -39,13 +40,43 @@
 					<div class="panel-heading">
                     	<h3 class="panel-title">Dashboard</h3>
                 	</div>
-					<div style="margin:auto" id="div_dashboardOptions">
-						<?php
-							include("ps_country_dropdown.php");
-						?>
+                	<div style='margin: 15px'>
+						<form role="form">
+							<div class="row" id="div_dashboardOptions">
+								<div class="col-md-3" id="divCountry">
+									<select id="selCountry" class="form-control">
+										<option>Select Country</option>
+										<?php				
+											$qry_cntry='select id value, name text from ps_countries';
+											$addDetailsDBRReturnResult = mysql_query( $qry_cntry, $conn );
+
+											if(! $addDetailsDBRReturnResult ) {
+												die('Could not select grid details: ' . mysql_error());
+											}
+
+											if(mysql_num_rows($addDetailsDBRReturnResult) == 0){
+												die('Something went wrong : ' . mysql_error());
+											}
+											
+											while($addDetailsDBRow = mysql_fetch_assoc($addDetailsDBRReturnResult)){
+												?>
+												<option value="<?php echo $addDetailsDBRow['value']; ?>"><?php echo $addDetailsDBRow['text']; ?></option>
+												<?php
+											}
+										?>
+									</select>
+								</div>
+								<div class="col-md-3 form-group" id="div_Company">
+									<select id="selParking" class="form-control">
+										<option>Select Country First</option>
+									</select>
+								</div>
+								<div class="col-md-3" id="div_Submit">
+									<input type="button" id="btnDoughnutButton" class="btn btn-primary btnSimple" value="GO"</input>
+								</div>								
+							</div>
+						</form>
 					</div>
-					<br/>
-					<br/>
 					<?php
 						include("psDoughnutData.php");
 					?>
@@ -65,16 +96,26 @@
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasDiv">
 										<canvas id="psParkingCanvas">
 										</canvas>
+										<div id="doughnutDataTable">
+					 					</div>
 									</div>
 								</span>
 							</div>
 							<div class="tab-pane" id="2">
-								<h3>Notice the gap between the content and tab after applying a background color</h3>
+								<span>
+									<!--<?php echo $jsonData; ?>-->
+									<div style='width:"50%", height:"50%"' id="psParkingCanvasFDiv">
+										<canvas id="psParkingCanvasF">
+										</canvas>
+										<div id="doughnutDataTableF">
+										</div>
+									</div>
+								</span>
 							</div>
 						</div>
 					 </div>
-					 <div id="doughnutDataTable">
-					 </div>
+					 <!--<div id="doughnutDataTable">
+					 </div>-->
 				</div>
 			</div>
 		</div>
