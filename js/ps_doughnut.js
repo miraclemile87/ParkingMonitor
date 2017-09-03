@@ -11,7 +11,25 @@ $(document).ready(function() {
 	var commonTblText="";
 	var commonTblTextF="";
 
+	function getAddButton(uniqueId){
+		var addButtonText='<button id="' + uniqueId + '" type="button" class="addButtonClass btn btn-success">';
+	    addButtonText+='<span class="glyphicon glyphicon-plus-sign"></span>';
+	    addButtonText+='</button>';
+
+	    return addButtonText;
+	}
+
+	function getDeleteButton(uniqueId){
+    	var delButtonText='<button id="' + uniqueId + '" type="button" class="delButtonClass btn btn-danger">';
+    	delButtonText+='<span class="glyphicon glyphicon-minus-sign"></span>';
+    	delButtonText+='</button>';
+
+    	return delButtonText;
+	}
+
 	$("#btnDoughnutButton").click(function(){
+		//$("#selCountry").val();
+
 		getDoughnut();
 		//getDoughnutF();
 	});
@@ -21,9 +39,9 @@ $(document).ready(function() {
 			url : "psDoughnutData.php",
 			type : "GET",
 			success : function(data){
-				console.log(data);
+				//console.log(data);
 
-				data = [{"BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"30","FEMALE_PARKINGS_BOOKED":"0"},{"BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"120","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"40","FEMALE_PARKINGS_BOOKED":"0"},{"BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"25","FEMALE_PARKINGS_BOOKED":"0"}];
+				data = [{"company_ID":"1","building_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"30","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"120","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"40","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"25","FEMALE_PARKINGS_BOOKED":"0"}];
 
 				var dataLength = data.length;
 				
@@ -63,11 +81,11 @@ $(document).ready(function() {
 							//$("#doughnutCanvasContainer").append('<canvas id="' + data[itr].BUILDING_NO + '" width="400" height="400"></canvas>');
 
 							labelText.push("Building - " + data[itr].BUILDING_NO);
-							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED);
+							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].company_ID + "_" + data[itr].building_ID);
 							commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
 
 							if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
-								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED);
+								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].company_ID + "_" + data[itr].building_ID);
 								labelTextF.push("Building - " + data[itr].BUILDING_NO);
 								female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
 								backgroundColorValuesF.push(backgroundColorArray[itr]);
@@ -161,8 +179,8 @@ $(document).ready(function() {
 					options : doughnutOption[0]
 				});
 
-				drawTable();
-				drawTableF();
+				drawTable(commonTblText, "doughnutDataTable");
+				drawTable(commonTblTextF, "doughnutDataTableF");
 			},
 			error : function(data) {
 				console.log(data);
@@ -170,15 +188,21 @@ $(document).ready(function() {
 		});
 	}
 
-	function createTable(field1, field2, field3, field4){
-		commonTblText+="<tr><td><span style='color: green' class='glyphicon glyphicon-plus-sign'></td><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td><span style='color: red' class='glyphicon glyphicon-minus-sign'></td></tr>"
+	function createTable(field1, field2, field3, field4, uniqueIdVal){
+		var addButtonText = getAddButton(uniqueIdVal);
+		var delButtonText = getDeleteButton(uniqueIdVal);
+		//commonTblText+="<tr><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
+		commonTblText+="<tr><td>" + field1 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
 	}
 
-	function createTableF(field1, field2, field3, field4){
-		commonTblTextF+="<tr><td><span style='color: green' class='glyphicon glyphicon-plus-sign'></td><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td><span style='color: red' class='glyphicon glyphicon-minus-sign'></td></tr>"
+	function createTableF(field1, field2, field3, field4, uniqueIdVal){
+		var addButtonText = getAddButton(uniqueIdVal);
+		var delButtonText = getDeleteButton(uniqueIdVal);
+		//commonTblTextF+="<tr><td><span style='color: green' class='glyphicon glyphicon-plus-sign'></td><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td><span style='color: red' class='glyphicon glyphicon-minus-sign'></td></tr>"
+		commonTblTextF+="<tr><td>" + field1 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
 	}
 
-	function drawTable(){
+	/*function drawTable(){
 		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th></th><th>Building</th><th>Total</th><th>Available</th><th>Booked</th><th></th></tr></thead>";
 		commonTblBodyText+="<tbody>";
 		commonTblBodyText+=commonTblText;
@@ -188,19 +212,27 @@ $(document).ready(function() {
 		//console.log();
 
 		$("#doughnutDataTable").html(commonTblBodyText);
-	}
+	}*/
 
-	function drawTableF(){
-		alert(commonTblTextF);
-		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th></th><th>Building</th><th>Total</th><th>Available</th><th>Booked</th><th></th></tr></thead>";
+	function drawTable(commonTblTextVal, tblHandler){
+		//alert(commonTblTextF);
+		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th>Building</th><th>Total</th><th>Booked</th><th></th><th></th></tr></thead>";
 		commonTblBodyText+="<tbody>";
-		commonTblBodyText+=commonTblTextF;
+		commonTblBodyText+=commonTblTextVal;
 		commonTblBodyText+="</tbody>";
 		commonTblBodyText+="</table>";
 
 		//console.log();
 
-		$("#doughnutDataTableF").html(commonTblBodyText);
+		$("#" + tblHandler).html(commonTblBodyText);
+
+		$(".addButtonClass").off('click').on('click',function(){
+			//alert($(this).attr("id"));
+		});
+
+		$(".delButtonClass").off('click').on('click',function(){
+			//alert($(this).attr("id"));
+		});
 	}
 
 });

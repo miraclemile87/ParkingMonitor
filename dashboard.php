@@ -30,7 +30,7 @@
 		<script src="js/ps_doughnut.js"></script>
 		<script src="js/ps_company_data.js"></script>
 	</head>
-	<body>
+	<body style="font-family:Cambria">
 		<?php
 			include("ps_main_header.php");
 		?>
@@ -40,7 +40,7 @@
 					<div class="panel-heading">
                     	<h3 class="panel-title">Dashboard</h3>
                 	</div>
-                	<div style='margin: 15px'>
+                	<div style='margin: 15px' align='center'>
 						<form role="form">
 							<div class="row" id="div_dashboardOptions">
 								<div class="col-md-3" id="divCountry">
@@ -78,7 +78,7 @@
 						</form>
 					</div>
 					<?php
-						include("psDoughnutData.php");
+						//include("psDoughnutData.php");
 					?>
                 	<div id="div_mainTab">
 						<ul class="nav nav-tabs">
