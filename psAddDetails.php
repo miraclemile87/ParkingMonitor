@@ -10,6 +10,10 @@
 		die("Something went wrong. Retry after refreshing.");
 
 	$addDetailsStatus = "";
+	$actionDetails = "";
+
+	if(isset($_GET["actn"]))
+		$actionDetails=$_GET["actn"];
 
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -105,6 +109,35 @@
 					<form role="form" name="frm_AddDetails" action="" method="post">
 						<div class="form-group">
 							<?php
+
+								if($actionDetails == "E"){
+									$qry_editDetails = "Select PS_PARKINGSPACE_GRID_TABLE_NAME from ps_parkingspace_grid where PS_PARKINGSPACE_GRID_ID = " . $gridId;
+
+									//echo $qry_editDetails;
+
+									$editDetailsDBReturnResult = mysql_query($qry_editDetails, $conn);
+
+									if((!$editDetailsDBReturnResult) || mysql_num_rows($editDetailsDBReturnResult) == 0){
+										die("Could not prepare for edit");
+									}
+
+									$editTableName = "";
+
+									while($editDetailDBRow = mysql_fetch_assoc($editDetailsDBReturnResult)){
+										$editTableName = $editDetailDBRow["PS_PARKINGSPACE_GRID_TABLE_NAME"];
+									}
+
+									$editDataQuery = "select * from " . $editTableName;
+
+									$editDataDBRowReturnResult = mysql_query($editDataQuery, $conn);
+
+									if(!($editDataDBRowReturnResult) || mysql_num_rows($editDataDBRowReturnResult) != 1){
+										die ("Unable to fetch detailed data");
+									}
+
+									$editDataDBRow = mysql_fetch_assoc($editDataDBRowReturnResult);
+								}
+
 								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_COLUMN_ID`, `PS_PARKINGSPACE_GRID_COLUMN_NAME`, `PS_PARKINGSPACE_GRID_COLUMN_HEADER`, `INPUT_RESTRICTION_CODE`,`INPUT_RESTRICTION_ERROR_MSG`, `PS_PARKINGSPACE_GRID_COLUMN_REQUIRED`, `PS_PARKINGSPACE_GRID_COLUMN_QUERY`, `PS_PARKINGSPACE_GRID_COLUMN_ENABLED`, `PS_PARKINGSPACE_GRID_COLUMN_MESSAGE`, `PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH`, `PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH`, `START_DATE`, `END_DATE`, `MODIFICATION_DATE` FROM `ps_parkingspace_grid_details` grid join `ps_parkingspace_input_restriction` restriction on restriction.INPUT_RESTRICTION_CODE = grid.`PS_PARKINGSPACE_GRID_COLUMN _RESTRICTION_CODE` where PS_PARKINGSPACE_GRID_ID = " . $gridId . " ORDER BY PS_PARKINGSPACE_GRID_COLUMN_ID";
 								
 								//echo $qry_fetchDetails;
@@ -153,7 +186,8 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="text" pattern="[a-zA-Z]+" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" />
+			    							?> type="text" pattern="[a-zA-Z]+" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" 
+			    								value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];}?>' />
 		    						<?php
 		    							}
 									?>
@@ -168,7 +202,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="text" pattern="[a-zA-Z0-9-?%$#@]+" class="form-control" id="tpass_elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="tpass_elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> value="<?php echo $tPassValue; ?>" />
+			    							?> type="text" pattern="[a-zA-Z0-9-?%$#@]+" class="form-control" id="tpass_elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="tpass_elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];}else{echo $tPassValue;}?>'/>
 		    						<?php
 		    							}
 									?>
@@ -181,7 +215,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="email" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" />
+			    							?> type="email" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?> " value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];} ?>'/>
 		    						<?php
 		    							}
 									?>
@@ -194,7 +228,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="number" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" />
+			    							?> type="number" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];} ?>'/>
 		    						<?php
 		    							}
 									?>
@@ -207,7 +241,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="text"  oninvalid="setCustomValidity('<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_ERROR_MSG'] ?>')" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" />
+			    							?> type="text"  oninvalid="setCustomValidity('<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_ERROR_MSG'] ?>')" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];} ?>'/>
 		    						<?php
 		    							}
 									?>
@@ -219,7 +253,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> type="text" pattern="[a-zA-Z0-9]+" oninvalid="setCustomValidity('<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_ERROR_MSG'] ?>')" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" />
+			    							?> type="text" pattern="[a-zA-Z0-9]+" oninvalid="setCustomValidity('<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_ERROR_MSG'] ?>')" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>" value='<?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];} ?>'/>
 		    						<?php
 		    							}
 									?>
@@ -231,7 +265,7 @@
 			    								echo "minlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MIN_LENGTH']; 
 			    							if($addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'] != -1)
 			    								echo "maxlength=" . $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_MAX_LENGTH'];
-			    							?> rows="4s" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>"></textarea>
+			    							?> rows="4s" class="form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>"><?php if($actionDetails == "E"){echo $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]];} ?></textarea>
 		    						<?php
 		    							}
 									?>
@@ -243,7 +277,7 @@
 			    								$tHour=0;
 			    								for($tHour=0; $tHour <= 24; $tHour++){
 			    									?>
-			    									<option value="<?php echo $tHour; ?>"><?php echo $tHour; ?></option>
+			    									<option value="<?php echo $tHour; ?>" <?php if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $tHour){echo "selected";}?>><?php echo $tHour; ?></option>
 			    									<?php
 			    								}
 			    							?>
@@ -259,7 +293,7 @@
 			    								$tMinute=0;
 			    								for($tMinute=0; $tMinute <= 60; $tMinute++){
 			    									?>
-			    									<option value="<?php echo $tMinute; ?>"><?php echo $tMinute; ?></option>
+			    									<option value="<?php echo $tMinute; ?>" <?php if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $tMinute){echo "selected";}?>><?php echo $tMinute; ?></option>
 			    									<?php
 			    								}
 			    							?>
@@ -285,7 +319,9 @@
 												}
 
 												while($optDetailsDBRow = mysql_fetch_assoc($optQueryResult)){
-													echo "<option value='" . $optDetailsDBRow['value'] ."'>" . explode(";",$optDetailsDBRow['text'])[1] . "</option>";
+													echo "<option value='" . $optDetailsDBRow['value'] ."'";
+													if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $optDetailsDBRow['value']){echo "selected";}
+													echo ">" . explode(";",$optDetailsDBRow['text'])[1] . "</option>";
 												}
 			    							?>
 			    						</select>
@@ -296,7 +332,7 @@
 		    						<?php
 		    							if($addDetailsDBRow['INPUT_RESTRICTION_CODE'] == "STOPT"){
 		    						?>
-			    						<select class=" state-opt-class form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
+			    						<select class="<?php if($actionDetails == "E"){echo "state-class-has-value state-class-value-" . $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]]; }?> state-opt-class form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
 			    							<option value='-1'>Select Country first</option>
 			    						</select>
 		    						<?php
@@ -306,7 +342,7 @@
 		    						<?php
 		    							if($addDetailsDBRow['INPUT_RESTRICTION_CODE'] == "CITYOPT"){
 		    						?>
-			    						<select class=" city-opt-class form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
+			    						<select class="<?php if($actionDetails == "E"){echo "city-class-has-value city-class-value-" . $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]]; }?> city-opt-class form-control" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
 			    							<option value='-1'>Select State first</option>
 			    						</select>
 		    						<?php
@@ -329,7 +365,9 @@
 												}
 
 												while($optDetailsDBRow = mysql_fetch_assoc($optQueryResult)){
-													echo "<option value='" . $optDetailsDBRow['value'] ."'>" . $optDetailsDBRow['text']. "</option>";
+													echo "<option value='" . $optDetailsDBRow['value'] ."'";
+													if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $optDetailsDBRow['value']){echo "selected";}
+													echo ">" . $optDetailsDBRow['text']. "</option>";
 												}
 			    							?>
 			    						</select>

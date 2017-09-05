@@ -19,7 +19,53 @@ body{
 
 #div_loginPanel{
 	box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);
-	background: white
+	background: white;
+	padding: 12px;
+}
+
+#div_seperator{
+	color: #2a637d;
+	font-size: 27px;
+	text-align: center;
+	padding: 6px;
+}
+
+#div_dashboard{
+	color: #2a637d;
+	font-size: 48px;
+	text-align: center;	
+	box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);
+	background: white;
+	padding: 12px;
+	padding-top: 21px;
+}
+
+.dashboard-header-class{
+	color: #c9302c;
+	text-align:center;
+    position:relative;
+    z-index:2;
+}
+
+.line-center{
+    margin:0;padding:0 10px;
+    background:#fff;
+    display:inline-block;
+}
+
+.dashboard-header-class:after{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    border-top:solid 1px red;
+    z-index:-1;
+}
+
+.row-class{
+	padding-left: 30px;
+	padding-right: 30px
 }
 
 #h1_loginHeader{

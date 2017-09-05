@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<table class="table table-striped tblViewDetail">
 							<?php
-								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_NAME`, `PS_PARKINGSPACE_GRID_TABLE_NAME`, `PS_PARKINGSPACE_GRID_HEADER`, `PS_PARKINGSPACE_GRID_QUERY`,	`PS_PARKINGSPACE_GRID_QUERY_HEADER`, `PS_PARKINGSPACE_GRID_PID`, `PS_PARKINGSPACE_GRID_HID` FROM `ps_parkingspace_grid` where PS_PARKINGSPACE_GRID_ID = " . $gridId;
+								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_NAME`, `PS_PARKINGSPACE_GRID_TABLE_NAME`, `PS_PARKINGSPACE_GRID_HEADER`, `PS_PARKINGSPACE_GRID_QUERY`,	`PS_PARKINGSPACE_GRID_QUERY_HEADER`, `PS_PARKINGSPACE_GRID_PID`, `PS_PARKINGSPACE_GRID_HID`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL_VALUE` FROM `ps_parkingspace_grid` where PS_PARKINGSPACE_GRID_ID = " . $gridId;
 								
 								//echo $qry_fetchDetails;
 
@@ -83,6 +83,8 @@
 									$colHeaders = explode("|", $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_QUERY_HEADER"]);
 									$colPID = explode("|", $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_PID"]);
 									$colHID= explode("|", $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_HID"]);
+
+
 									?>
 									<thead>
 										<tr>
@@ -98,6 +100,7 @@
 									<tbody>
 										<?php
 										while($viewDetailRow = mysql_fetch_array($viewSpecificDetailsDBReturnResult, MYSQL_NUM)){
+											//echo implode(" " , $viewDetailRow);
 											?>
 											<tr>
 												<?php
@@ -114,7 +117,7 @@
 														}
 													}
 												?>
-												<td><span class="spn_edit_class spn_action_class glyphicon glyphicon-edit"></span></td>
+												<td><a href="<?php echo "psAddDetails.php?gid=" . $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_ID"] . "&gnm=" . str_rot13($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_HEADER"]) . "&actn=E"; ?>"><span class="spn_edit_class spn_action_class glyphicon glyphicon-edit"></span></a></td>
 												<td><span class="spn_delete_class spn_action_class glyphicon glyphicon-remove-sign"></span></td>	
 											</tr>
 											<?php

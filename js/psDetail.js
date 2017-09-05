@@ -6,6 +6,28 @@ $(document).ready(function(){
 		$("#frmSubmitForm").submit();
 	});
 
+	if($(".country-opt-class").val() != -1 && $(".country-opt-class").val() != ""){
+		$(".country-opt-class").trigger("change");
+		alert($(".country-opt-class").val());
+		//$(".country-opt-class").val($(".country-opt-class").val()).change();
+	}
+
+	function updateState(){
+		$(".state-class-has-value").each(function(){
+			alert();
+			var elementClass = $(this).attr('class').split(" ");
+			alert(elementClass);
+			$.each(elementClass, function(indx, item){
+				if(item.indexOf("state-class-value") != -1){
+					value = item.replace("state-class-value-","");
+					//alert($(this).children("option [value=" + value + "]").length);
+					$(this).children("option [value=" + value + "]").attr("selected", "selected");
+					return false;
+				}
+			});
+		});
+	}
+
 	$(".spnEditDetails_class").click(function(){
 		//alert($(this).attr('id').replace("spnEditDetails_",""));
 
@@ -14,6 +36,7 @@ $(document).ready(function(){
 	});
 
 	$(".country-opt-class").change(function(){
+		alert();
 		countryVal=$(this).val();
 		$.ajax({
 			url : "psStateData.php",
@@ -22,6 +45,7 @@ $(document).ready(function(){
 			success : function(htmldata){
 				//console.log(htmldata);
 				$(".state-opt-class").html(htmldata);
+				updateState();
 			},
 			error : function(data) {
 				//console.log(data);

@@ -14,10 +14,9 @@
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 			<ul class="nav navbar-nav navbar-right">
+				<!--<li><a href="#">Help</a></li>-->
 			<!--<ul class="nav nav-pills navbar-right">-->
 				<!-- TD: active not working? -->
-				<li class="active"><a href="#">Dashboard</a></li>
-
 				<?php
 					$qry_fetchMenu="SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_MENU_LABEL` , `PS_PARKINGSPACE_GRID_IS_LEAF` FROM `ps_parkingspace_grid` where `PS_PARKINGSPACE_GRID_MENU_LEVEL` = 0";
 					$menuQueryResult = mysql_query( $qry_fetchMenu, $conn );
@@ -72,14 +71,16 @@
 						}
 					?>
 				
-				<li><a href="#">Help</a></li>				
+				<li><a href="#">Help</a></li>
 				<li>
 					<a id="a_login" class="btnSimple" href="#" style="color: white; margin-right: 6px; margin-left: 6px">LOGIN</a>
 				</li>
 			</ul>
-			<form class="navbar-form navbar-right">
-				<input type="text" class="form-control" placeholder="Search...">
-			</form>
 		</div>
 	</div>
-</nav>		
+</nav>
+<script>
+	/*$(document).ready(function(){
+		$(".main-head-country-opt-class").msDropdown();
+	});*/
+</script>
