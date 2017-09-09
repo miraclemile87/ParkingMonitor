@@ -4,21 +4,25 @@
 
 	if(isset($_POST['CMPNY_BLDG_ID']) && isset($_POST["mORf"]) && isset($_POST["aORd"])){
 
-		$qryCount = "select count(*) from ps_parkingspace_building_parkings where company_building_id = " . $_POST['CMPNY_BLDG_ID'] . " and parking_business_date = date(now())";
+		$qryCount = "select count(*) parking_count from ps_parkingspace_building_parkings where company_building_id = " . $_POST['CMPNY_BLDG_ID'] . " and business_date = date(now())";
 
 		$dbCountReturnResult = mysql_query($qryCount, $conn);
 
+		echo $qryCount;
+
 		if(!$dbCountReturnResult){
-			die("Something went wrong");
+			die("Something went wrong while fetching parking details.");
 		}
 
-		if(mysql_num_rows($dbCountReturnResult) == 0){
-			$sqlInsert = "insert into ps_parkingspace_building_parkings (`COMPANY_BUILDING_ID`,`PARKING_BUSINESS_DATE`,`PARKING_COUNT_C`,`PARKING_COUNT_F`,`MODIFICATION_DATE` FROM `ps_parkingspace_building_parkings`) values ('" . $_POST['CMPNY_BLDG_ID'] . "', date(now()), 0, 0, now())"; 
+		$cntDBResultReturnRow = mysql_fetch_assoc($dbCountReturnResult);
+
+		if($cntDBResultReturnRow['parking_count'] == 0){
+			$sqlInsert = "insert into ps_parkingspace_building_parkings (`COMPANY_BUILDING_ID`,`BUSINESS_DATE`,`PARKING_COUNT_C`,`PARKING_COUNT_F`,`MODIFICATION_DATE`) values ('" . $_POST['CMPNY_BLDG_ID'] . "', date(now()), 0, 0, now())"; 
 
 			$dbInsReturnResult = mysql_query($sqlInsert, $conn);
 
 			if(!$dbInsReturnResult){
-				die("Something went wrong");
+				die("Something went wrong while booking a parking" . mysql_error() . ' and '. $sqlInsert);
 			}
 		}
 
@@ -44,7 +48,7 @@
 			}
 		}
 		
-		$qry_companySql = $qry_companySql .' last_modification_date = now() where company_building_id = ' . $_POST['CMPNY_BLDG_ID'] . ' and business_date = date(now())';
+		$qry_companySql = $qry_companySql .' modification_date = now() where company_building_id = ' . $_POST['CMPNY_BLDG_ID'] . ' and business_date = date(now())';
 
 		//echo $qry_companySql;
 
@@ -53,7 +57,7 @@
 		$dbReturnResult = mysql_query($qry_companySql, $conn);
 
 		if(!$dbReturnResult){
-			die("Something went wrong");
+			die("Something went wrong while updating booking for parking."  . mysql_error());
 		}
 
 		
@@ -62,7 +66,7 @@
 		$dbInsDetailsReturnResult = mysql_query($sqlInsertDetails, $conn);
 
 		if(!$dbInsDetailsReturnResult){
-			die("Something went wrong");
+			die("Something went wrong while booking parking details."  . mysql_error());
 		}
 		
 	}else{

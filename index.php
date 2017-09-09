@@ -13,8 +13,13 @@
 	//}
 	//else
 		//echo "false";
+//echo $_SERVER["REQUEST_METHOD"];
+
+	session_start();
 
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
+
+		//if(isset($_REQUEST['submit'])){
 		$myusername = $_POST['txtLogInUserName'];
 		$globalUserName = $myusername;
 		$mypassword_orig = $_POST['txtLogInPassword'];
@@ -69,7 +74,9 @@
 		
 			/*$sql = "SELECT user_id, user_role, user_given_name, case when user_password = '" . $mypassword . "' then 1 else 2 end user_type FROM ps_parkingspace_users WHERE user_name = '" . $myusername. "' and (user_password = '". $mypassword . "' or user_temp_password = '". $mypassword . "')";*/
 
-			$sql = "SELECT user_id, user_role, user_given_name, user_password, user_temp_password, case when now() > USER_TEMP_PASSWORD_EXPIRATION_DATE then 1 else 0 end user_temp_password_expired from ps_parkingspace_users WHERE user_name = '" . $myusername. "'";
+			$sql = "SELECT user_id, user_role, user_given_name, user_password, user_temp_password, case when now() > DATE_ADD(USER_TEMP_PASSWORD_EXPIRATION_DATE,INTERVAL 1 DAY) then 1 else 0 end user_temp_password_expired from ps_parkingspace_users WHERE user_name = '" . $myusername. "'";
+
+			//echo $sql;
 			
 			mysql_select_db($dbname);
 			$retval = mysql_query( $sql, $conn );
@@ -83,6 +90,7 @@
 
 			if($count == 1) {
 				if($row[3] == null){
+					echo "11";
 					if(password_verify($mypassword_orig, strrev($row[4]))){
 						if($row[5] == 1){
 							$error = "**Temporary password has expired";
@@ -95,13 +103,22 @@
 					}
 				}else{
 					if(password_verify($mypassword_orig, strrev($row[3]))){
-						session_start();
-						$_SESSION['LOGIN_USER'] = $myusername;
-						$_SESSION['USER_GIVE_NAME'] = $row[2];
-						$_SESSION['USER_ROLE'] = $row[1];
-						$_SESSION['USER_ID'] = $row[0];
-						$_SESSION['USER_NAME'] = $myusername;
-						header("location: dashboard.php");
+
+						$qry_updateDetailsQuery = "update ps_parkingspace_users set last_logged_in = now() where user_name = '" . $myusername. "'";
+
+						if(mysql_query($qry_updateDetailsQuery) == TRUE){
+							$_SESSION['LOGIN_USER'] = $myusername;
+							$_SESSION['USER_GIVE_NAME'] = $row[2];
+							$_SESSION['USER_ROLE'] = $row[1];
+							$_SESSION['USER_ID'] = $row[0];
+							$_SESSION['USER_NAME'] = $myusername;
+
+
+							//$error = $_SESSION['USER_ROLE'];
+							header("location: dashboard.php");
+						}else{
+							die ("Something went wrong");
+						}
 					}else{
 						$showChangePassword = "N";
 						$error = "**Invalid Login or Password";
@@ -135,7 +152,7 @@
 				<div class="col-md-4 col-md-offset-4">
 					<div id="div_dashboard">
 						<!--<i class="fa fa-dashboard" style="font-size:60px;color:lightblue;text-shadow:2px 2px 4px #000000;"></i>-->
-						<button class="btn btn-primary" id="btnDashboard" style="width: 90%; font-size:24px">Parking Dashboard <i class="fa fa-dashboard"></i></button>
+						<a href="dashboard.php" class="btn btn-primary" id="btnDashboard" style="width: 90%; font-size:24px">Parking Dashboard <i class="fa fa-dashboard"></i></a>
 						<h5 class="dashboard-header-class"><span  class="line-center">NO LOG IN TO VIEW THE PARKINGS</span></h5>
 					</div>
 					<div id="div_seperator">

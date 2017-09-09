@@ -1,5 +1,6 @@
 <?php
 	include("ps_config_session.php");
+	session_start();
 	$error = "";
 	if($_SERVER["REQUEST_METHOD"] == "POST") {
 		$myusername = $_POST['txtLogInUserName'];
@@ -55,7 +56,7 @@
 		<div id="div_mainBody">
 			<div class="row rowClass">
 				<?php
-					$qry_fetchMenu="SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_MENU_LABEL`, `PS_PARKINGSPACE_GRID_GLYPH_1`, `PS_PARKINGSPACE_GRID_GLYPH_2`,	`PS_PARKINGSPACE_GRID_DESCRIPTION`, `PS_PARKINGSPACE_GRID_IS_LEAF`, `PS_PARKINGSPACE_GRID_BG`, `PS_PARKINGSPACE_GRID_FG` FROM `ps_parkingspace_grid` where `PS_PARKINGSPACE_GRID_MENU_LEVEL` = 1";
+					$qry_fetchMenu="SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_REF_ID`, `PS_PARKINGSPACE_GRID_REF_ID_INITIATOR`, `PS_PARKINGSPACE_GRID_MENU_LABEL`, `PS_PARKINGSPACE_GRID_GLYPH_1`, `PS_PARKINGSPACE_GRID_GLYPH_2`,	`PS_PARKINGSPACE_GRID_DESCRIPTION`, `PS_PARKINGSPACE_GRID_IS_LEAF`, `PS_PARKINGSPACE_GRID_BG`, `PS_PARKINGSPACE_GRID_FG` FROM `ps_parkingspace_grid` where `PS_PARKINGSPACE_GRID_MENU_LEVEL` = 1";
 					$menuQueryResult = mysql_query( $qry_fetchMenu, $conn );
 
 					if(! $menuQueryResult ) {
@@ -69,7 +70,7 @@
 					while($menuDetailsDBRow = mysql_fetch_assoc($menuQueryResult)){
 				?>
 				<div class="col-md-4 logo_container_class" name= "div_name_<?php echo str_rot13($menuDetailsDBRow["PS_PARKINGSPACE_GRID_MENU_LABEL"]); ?>" id="div_id_<?php echo $menuDetailsDBRow["PS_PARKINGSPACE_GRID_ID"]; ?>">
-					<div class="logo-content">
+					<div class="logo-content <?php if($menuDetailsDBRow['PS_PARKINGSPACE_GRID_REF_ID_INITIATOR'] == 1){echo "initiator-class rid-class_" . $menuDetailsDBRow['PS_PARKINGSPACE_GRID_REF_ID'];}?>">
 				      <span class="logo-class <?php echo $menuDetailsDBRow["PS_PARKINGSPACE_GRID_GLYPH_1"]; ?>" 
 				      	<?php if (!empty($menuDetailsDBRow['PS_PARKINGSPACE_GRID_BG'])) echo " style='color:" . $menuDetailsDBRow['PS_PARKINGSPACE_GRID_BG'] . "'"; 
 				      	?>

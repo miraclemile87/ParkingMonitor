@@ -2,6 +2,7 @@ $(document).ready(function() {
 
 	var backgroundColorArray=["#76C175", "#46BFBD", "#FDB45C", "#08c"];
 	var borderColorArray=["#76C175", "#46BFBD", "#FDB45C", "#08c"];
+	var backgroundColorFilledArray = ["#e60000" ,"#ff9999"];
 
 	var bookedColor = "#F7464A ";
 	var commonBookedSlots = 0;
@@ -27,21 +28,46 @@ $(document).ready(function() {
     	return delButtonText;
 	}
 
-	$("#btnDoughnutButton").click(function(){
-		//$("#selCountry").val();
+	$("#btnDoughnutButton").attr("disabled", "true");
 
+	$(".selectDBClass").change(function(){
+		var enableButton = true;
+		$(".selectDBClass").each(function(){
+			if($(this).val() == "")
+				enableButton = false;
+		});
+
+		if(enableButton == true)
+			$("#btnDoughnutButton").removeAttr("disabled");
+		else
+			$("#btnDoughnutButton").attr("disabled", "true");
+	});
+
+	$("#btnDoughnutButton").click(function(){
+		$("#btnDoughnutButton").attr("disabled", "true");
 		getDoughnut();
 		//getDoughnutF();
 	});
 
 	function getDoughnut(){
+
+		commonTblText="";
+		commonTblTextF="";
+
+		$("#psParkingCanvas").empty();
+		$("#doughnutDataTable").empty();
+		$("#psParkingCanvasF").empty();
+		$("#doughnutDataTableF").empty();
+
+		var urlData = "psDoughnutData.php?cntr=" + $("#selCountry").val() + "&cmpn=" + $("#selCompany").val();
+		//alert(urlData);
 		$.ajax({
-			url : "psDoughnutData.php",
+			url : urlData,
 			type : "GET",
 			success : function(data){
-				//console.log(data);
+				console.log(data);
 
-				data = [{"company_ID":"1","building_ID":"1","COMPANY_BUILDING_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","COMPANY_BUILDING_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"100","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"30","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"3","COMPANY_BUILDING_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"120","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"40","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"4","COMPANY_BUILDING_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"0","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"25","FEMALE_PARKINGS_BOOKED":"0"}];
+				//data = [{"company_ID":"1","building_ID":"1","COMPANY_BUILDING_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"90","COMMON_PARKINGS_BOOKED":"10","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","COMPANY_BUILDING_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"50","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"10","FEMALE_PARKINGS_BOOKED":"20"},{"company_ID":"1","building_ID":"3","COMPANY_BUILDING_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"70","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"20","FEMALE_PARKINGS_BOOKED":"20"},{"company_ID":"1","building_ID":"4","COMPANY_BUILDING_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"30","COMMON_PARKINGS_BOOKED":"20","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"5","FEMALE_PARKINGS_BOOKED":"20"}];
 
 				var dataLength = data.length;
 				
@@ -67,13 +93,16 @@ $(document).ready(function() {
 				var borderWidthValues = [];
 				var borderWidthValuesF = [];
 
+				var totalBooked = 0;
+				var totalBookedF = 0;
+
 				if(dataLength == 0){
 				}else{
 					titleText = data[0].BUILDING_NO + " - " + data[0].COMPANY_NAME + ", " + data[0].COMPANY_LOCATION + ", " + data[0].COMPANY_LANDMARK;
-					if(dataLength == 1){
+					if(dataLength == 0){
 
 					}else{
-						for (var itr = 0; itr < dataLength; itr++) {
+						for (var itr = 0, colorItr = 0; itr < dataLength; itr++, colorItr++) {
 
 							commonBookedSlots+=data[itr].COMMON_PARKINGS_BOOKED;
 
@@ -84,13 +113,28 @@ $(document).ready(function() {
 							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
 							commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
 
+							totalBooked+= parseInt(data[itr].COMMON_PARKINGS_BOOKED);
+
 							if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
 								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
 								labelTextF.push("Building - " + data[itr].BUILDING_NO);
+								//labelTextF.push("Booked (Building - " + data[itr].BUILDING_NO + ")");
+								
 								female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
+								//female_DatasetValues.push(data[itr].FEMALE_PARKINGS_BOOKED);
+								
 								backgroundColorValuesF.push(backgroundColorArray[itr]);
+								/*if(backgroundColorFilledArray.length <= colorItr){
+									colorItr=0;
+								}*/
+								
 								borderColorValuesF.push(borderColorArray[itr]);
+								//backgroundColorValuesF.push(backgroundColorFilledArray[colorItr]);
+								
 								borderWidthValuesF.push(1);
+								//borderWidthValuesF.push(1);
+
+								totalBookedF+= parseInt(data[itr].FEMALE_PARKINGS_BOOKED);
 							}
 
 							backgroundColorValues.push(backgroundColorArray[itr]);
@@ -102,9 +146,22 @@ $(document).ready(function() {
 						//commOn_DatasetValues.push(commonBookedSlots);
 						//female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
 						//console.log(backgroundColorArray[itr]);
-						backgroundColorValues.push[bookedColor];
-						borderColorValues.push[bookedColor];
+						commOn_DatasetValues.push(totalBooked);
+						labelText.push("Total Booked");
+						backgroundColorValues.push(bookedColor);
+						backgroundColorValues.push(backgroundColorFilledArray[0]);
+						borderColorValues.push(bookedColor);
+						borderColorValues.push(backgroundColorFilledArray[0]);
 						borderWidthValues.push(1);
+						borderWidthValues.push(1);
+
+						labelTextF.push("Total Booked");
+						female_DatasetValues.push(totalBookedF);
+						backgroundColorValuesF.push(backgroundColorFilledArray[0]);
+						borderColorValuesF.push(backgroundColorFilledArray[0]);
+						borderWidthValuesF.push(1);
+
+
 					}
 				}
 
@@ -212,6 +269,19 @@ $(document).ready(function() {
 		//console.log();
 
 		$("#doughnutDataTable").html(commonTblBodyText);
+	}
+
+	function drawTableF(){
+		alert(commonTblTextF);
+		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th></th><th>Building</th><th>Total</th><th>Available</th><th>Booked</th><th></th></tr></thead>";
+		commonTblBodyText+="<tbody>";
+		commonTblBodyText+=commonTblTextF;
+		commonTblBodyText+="</tbody>";
+		commonTblBodyText+="</table>";
+
+		//console.log();
+
+		$("#doughnutDataTableF").html(commonTblBodyText);
 	}*/
 
 	function drawTable(commonTblTextVal, tblHandler){
@@ -222,9 +292,14 @@ $(document).ready(function() {
 		commonTblBodyText+="</tbody>";
 		commonTblBodyText+="</table>";
 
+		console.log("-----");
+		console.log(commonTblBodyText);
+
 		//console.log();
 
 		$("#" + tblHandler).html(commonTblBodyText);
+
+		console.log("is " + tblHandler);
 
 		$(".addButtonClass").off('click').on('click',function(){
 			var tdChildren = $(this).parents("tr").children("td");
@@ -256,7 +331,7 @@ $(document).ready(function() {
 			        }
 			    },
 			    callback: function(result){
-			    	bookParkingSpace(result, handlerId, maleOrFemale);
+			    	bookParkingSpace(result, handlerId, maleOrFemale,'A');
 			    }
 			});
 			//alert($(this).attr("id"));
@@ -292,15 +367,19 @@ $(document).ready(function() {
 			        }
 			    },
 			    callback: function(result){
-			    	bookParkingSpace(result, handlerId, maleOrFemale);
+			    	bookParkingSpace(result, handlerId, maleOrFemale,'D');
 			    }
 			});
 		});
 
 		enableDisableButton();
+
+
 	}
 
-	function bookParkingSpace(result, btnHandlerValue, maleOrFemale){
+	//$(".tab-content").children(".tab-pane[id='2']").show();
+
+	function bookParkingSpace(result, btnHandlerValue, maleOrFemale, bookedOrFreed){
 		if(result){
 			//alert(btnHandler);
 			//alert(btnHandler.val());
@@ -310,13 +389,16 @@ $(document).ready(function() {
 			$.ajax({
 				url : "ps_updateParkingData.php",
 				type : "POST",
-				data: "CMPNY_BLDG_ID="+handlerValue+"&mORf="+maleOrFemale+"&aORd=A",
+				data: "CMPNY_BLDG_ID="+handlerValue+"&mORf="+maleOrFemale+"&aORd="+bookedOrFreed,
 				success : function(htmldata){
 					//$("#selParking").html(htmldata);
-					alert("done " + htmldata);
+					//alert("done " + htmldata);
+					//console.log(htmldata);
+					//location.reload();
+					getDoughnut();
 				},
 				error : function(data) {
-					//console.log(data);
+					console.log(data);
 				}
 			});
 		}
@@ -353,6 +435,5 @@ $(document).ready(function() {
 
 		});	
 	}
-
 
 });

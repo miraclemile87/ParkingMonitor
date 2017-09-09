@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+	$("#txtLogInUserName").focus();
+
 	$("#btnDashboard").click(function(){
 		window.location="dashboard.php";
 	});

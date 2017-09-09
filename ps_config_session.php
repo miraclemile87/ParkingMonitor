@@ -11,4 +11,6 @@
 	}
 
 	mysql_select_db($dbname);
+
+	//session_start();
 ?>

@@ -52,7 +52,7 @@
 						<div class="form-group">
 							<table class="table table-striped tblViewDetail">
 							<?php
-								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_NAME`, `PS_PARKINGSPACE_GRID_TABLE_NAME`, `PS_PARKINGSPACE_GRID_HEADER`, `PS_PARKINGSPACE_GRID_QUERY`,	`PS_PARKINGSPACE_GRID_QUERY_HEADER`, `PS_PARKINGSPACE_GRID_PID`, `PS_PARKINGSPACE_GRID_HID`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL_VALUE` FROM `ps_parkingspace_grid` where PS_PARKINGSPACE_GRID_ID = " . $gridId;
+								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_NAME`, `PS_PARKINGSPACE_GRID_TABLE_NAME`, `PS_PARKINGSPACE_GRID_HEADER`, `PS_PARKINGSPACE_GRID_QUERY`,	`PS_PARKINGSPACE_GRID_QUERY_HEADER`, `PS_PARKINGSPACE_GRID_PID`, `PS_PARKINGSPACE_GRID_HID`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL_VALUE`, `PS_PARKINGSPACE_GRID_IS_EDITABLE`, `PS_PARKINGSPACE_GRID_IS_DELETABLE` FROM `ps_parkingspace_grid` where PS_PARKINGSPACE_GRID_ID = " . $gridId;
 								
 								//echo $qry_fetchDetails;
 
@@ -72,7 +72,7 @@
 								
 								//$showResultCounter = 1;
 								if(!empty($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_QUERY"])){
-									$viewSpecificDetailsDBReturnResult = mysql_query($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_QUERY"], $conn);
+									$viewSpecificDetailsDBReturnResult = mysql_query(str_replace("#CURRENT_USER_ID#",$_SESSION['USER_ID'], $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_QUERY"]), $conn);
 
 									if(! $viewSpecificDetailsDBReturnResult){
 										die('Could not get query details.');
@@ -101,12 +101,14 @@
 										<?php
 										while($viewDetailRow = mysql_fetch_array($viewSpecificDetailsDBReturnResult, MYSQL_NUM)){
 											//echo implode(" " , $viewDetailRow);
+											$uniqueId="";
 											?>
 											<tr>
 												<?php
 													foreach ($viewDetailRow as $index => $rowDataValue) {
 														$idx=$index + 1;
 														if(in_array($idx, $colPID)){
+															$uniqueId = $rowDataValue;
 															if(!in_array($idx, $colHID)){
 																echo "<td class='class_td_" . $index . "'>" . $rowDataValue . "</td>";
 															}else{
@@ -117,8 +119,18 @@
 														}
 													}
 												?>
-												<td><a href="<?php echo "psAddDetails.php?gid=" . $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_ID"] . "&gnm=" . str_rot13($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_HEADER"]) . "&actn=E"; ?>"><span class="spn_edit_class spn_action_class glyphicon glyphicon-edit"></span></a></td>
-												<td><span class="spn_delete_class spn_action_class glyphicon glyphicon-remove-sign"></span></td>	
+												<?php if($viewDetailsDBRReturnResultRow['PS_PARKINGSPACE_GRID_IS_EDITABLE'] != 0){
+													?>
+													<td><a href="<?php echo "psAddDetails.php?gid=" . $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_ID"] . "&gnm=" . str_rot13($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_HEADER"]) . "&actn=E&uid=" . $uniqueId; ?>"><span class="spn_edit_class spn_action_class glyphicon glyphicon-edit"></span></a></td>
+													<?php
+												}
+												?>
+												<?php if($viewDetailsDBRReturnResultRow['PS_PARKINGSPACE_GRID_IS_DELETABLE'] != 0){
+													?>
+													<td><span class="spn_delete_class spn_action_class glyphicon glyphicon-remove-sign"></span></td>
+												<?php
+													}
+												?>
 											</tr>
 											<?php
 										}									

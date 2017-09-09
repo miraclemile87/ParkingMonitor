@@ -1,7 +1,8 @@
 <?php
 	// TD: need to include the session
-	include("ps_valid_session.php");
+	//include("ps_valid_session.php");
 	include("ps_config_session.php");
+	session_start();
 
 	//$colorArray = array("#337ab7","#f0ad4e","#5bc0de");
 
@@ -45,8 +46,8 @@
 						<form role="form">
 							<div class="row" id="div_dashboardOptions">
 								<div class="col-md-3" id="divCountry">
-									<select id="selCountry" class="form-control">
-										<option>Select Country</option>
+									<select id="selCountry" class="form-control selectDBClass" required>
+										<option value="">Select Country</option>
 										<?php				
 											$qry_cntry='select id value, name text from ps_countries';
 											$addDetailsDBRReturnResult = mysql_query( $qry_cntry, $conn );
@@ -68,8 +69,8 @@
 									</select>
 								</div>
 								<div class="col-md-3 form-group" id="div_Company">
-									<select id="selParking" class="form-control">
-										<option>Select Country First</option>
+									<select id="selCompany" class="form-control selectDBClass" required>
+										<option value="" >Select Country First</option>
 									</select>
 								</div>
 								<div class="col-md-3" id="div_Submit">
@@ -93,7 +94,7 @@
 						<div class="tab-content">
 							<div class="tab-pane active tab-content-pane-class" id="1">
 								<span>
-									<!--<?php echo $jsonData; ?>-->
+									<?php //echo $jsonData; ?>
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasDiv">
 										<canvas id="psParkingCanvas">
 										</canvas>
@@ -104,7 +105,6 @@
 							</div>
 							<div class="tab-pane" id="2">
 								<span>
-									<!--<?php echo $jsonData; ?>-->
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasFDiv">
 										<canvas id="psParkingCanvasF">
 										</canvas>

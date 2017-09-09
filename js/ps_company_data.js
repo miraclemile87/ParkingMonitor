@@ -7,10 +7,10 @@ $("document").ready(function(){
 			type : "POST",
 			data: "CNTRY="+countryVal,
 			success : function(htmldata){
-				$("#selParking").html(htmldata);
+				$("#selCompany").html(htmldata);
 			},
 			error : function(data) {
-				//console.log(data);
+				console.log(data);
 			}
 		});
 	});
