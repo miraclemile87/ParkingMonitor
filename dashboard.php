@@ -36,7 +36,7 @@
 		<?php
 			include("ps_main_header.php");
 		?>
-		<div class="row">
+		<div class="row rowClass">
 			<div class="col-md-10 col-md-offset-1" id="div_dashboardPanel">
 				<div class="panel panel-primary" style="box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);">
 					<div class="panel-heading">
@@ -74,15 +74,46 @@
 									</select>
 								</div>
 								<div class="col-md-3" id="div_Submit">
-									<input type="button" id="btnDoughnutButton" class="btn btn-primary btnSimple" value="GO"</input>
-								</div>								
+									<input type="button" id="btnDoughnutButton" class="btn btn-primary" value="GO"</input>
+									<!--<span id="btnDoughnutRefreshButton" class="btn btn-lg"><span class="glyphicon glyphicon-refresh" style="font-size: 24px; color: green"></span>Refresh</span>-->
+									 <button id="btnDoughnutRefreshButton" type="button" style="display:none" class="btn btn-success">
+							          	<span class="glyphicon glyphicon-refresh"></span> Refresh
+							        </button>
+								</div>	
+
 							</div>
 						</form>
 					</div>
-					<?php
-						//include("psDoughnutData.php");
-					?>
-                	<div id="div_mainTab">
+					<div class="noDataDisplay">
+						<div style="margin: 1%; font-size: 14px">
+							<!--<div class="row" id="div_row_description">
+								<div class="col-md-4 bg-info div-empty-content">
+									<h3>Simple</h3>
+								</div>
+								<div class="col-md-4 bg-warning div-empty-content">
+									<h3>Effective</h3>
+								</div>
+								<div class="col-md-4 bg-success div-empty-content">
+									<h3>Useful</h3>
+								</div>
+							</div>-->
+							<div class="alert alert-success fade in alert-dismissable" style="margin-top:18px;">
+							    <!--<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>-->
+							    <strong>What it does?</strong> <br/>Parking space tries to provide a set up which can be utilized to register the parking space, so that it can be updated when booked and emptied.
+							</div>
+
+							<div class="alert alert-info fade in alert-dismissable">
+							    <!--<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>-->
+							    <strong>How to begin?</strong><br/>If you are a user who'd like to check if a parking space is available in one of the <b>reistered</b> buildings, go straight ahead, select country, company and hit Go!!
+							</div>
+
+							<div class="alert alert-warning fade in alert-dismissable">
+							    <!--<a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>-->
+							    <strong>How do I register my company?</strong><br/> We'll be up shortly with an option to register as an admin so that you can set up your own parking circle.
+							</div>
+						</div>
+					</div>
+                	<div id="div_mainTab" style="display: none">
 						<ul class="nav nav-tabs">
 							<li class="active">
 								<a  href="#1" data-toggle="tab">Common</a>
@@ -92,9 +123,8 @@
 						</ul>
 
 						<div class="tab-content">
-							<div class="tab-pane active tab-content-pane-class" id="1">
+							<div class="tab-pane tab-content-pane-class active" id="1">
 								<span>
-									<?php //echo $jsonData; ?>
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasDiv">
 										<canvas id="psParkingCanvas">
 										</canvas>
@@ -103,7 +133,7 @@
 									</div>
 								</span>
 							</div>
-							<div class="tab-pane" id="2">
+							<div class="tab-pane tab-content-pane-class" id="2">
 								<span>
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasFDiv">
 										<canvas id="psParkingCanvasF">

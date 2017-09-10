@@ -48,6 +48,8 @@
 							<span id="spnAddDetails_<?php echo $gridId; ?>"  name="spnAddDetails_<?php echo $_GET['gnm']; ?>" class="spnDetails_class spnAddDetails_class spn_action_class"><span class="glyphicon glyphicon-plus-sign"></span></span>
 					</h3>
 					<hr/>
+					<span id="div-status-message">
+					</span>
 					<form role="form" name="frm_ViewDetails" action="" method="post">
 						<div class="form-group">
 							<table class="table table-striped tblViewDetail">
@@ -127,7 +129,7 @@
 												?>
 												<?php if($viewDetailsDBRReturnResultRow['PS_PARKINGSPACE_GRID_IS_DELETABLE'] != 0){
 													?>
-													<td><span class="spn_delete_class spn_action_class glyphicon glyphicon-remove-sign"></span></td>
+													<td><span id="deleteGridData" href="" class="<?php echo "gid=" . $viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_ID"] . "&gnm=" . str_rot13($viewDetailsDBRReturnResultRow["PS_PARKINGSPACE_GRID_HEADER"]) . "&actn=D&uid=" . $uniqueId; ?>"><span class="spn_delete_class spn_action_class glyphicon glyphicon-remove-sign"></span></span></td>
 												<?php
 													}
 												?>

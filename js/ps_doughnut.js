@@ -29,6 +29,7 @@ $(document).ready(function() {
 	}
 
 	$("#btnDoughnutButton").attr("disabled", "true");
+	$("#btnDoughnutRefreshButton").hide();
 
 	$(".selectDBClass").change(function(){
 		var enableButton = true;
@@ -37,16 +38,37 @@ $(document).ready(function() {
 				enableButton = false;
 		});
 
-		if(enableButton == true)
+		if(enableButton == true){
 			$("#btnDoughnutButton").removeAttr("disabled");
-		else
+			//$("#btnDoughnutRefreshButton").show();
+		}
+		else{
 			$("#btnDoughnutButton").attr("disabled", "true");
+			$("#btnDoughnutRefreshButton").hide();
+		}
 	});
 
 	$("#btnDoughnutButton").click(function(){
 		$("#btnDoughnutButton").attr("disabled", "true");
+		$("#btnDoughnutRefreshButton").show();
 		getDoughnut();
+		$(".tab-pane").toggleClass("active");
+		//$(this).toggleClass("active");
+		$(".nav").children("li").toggleClass("active");
+		$(".tab-pane").toggleClass("active");
+		//$(this).toggleClass("active");
+		$(".nav").children("li").toggleClass("active");
 		//getDoughnutF();
+	});
+
+	$("#btnDoughnutRefreshButton").click(function(){
+		getDoughnut();
+		$(".tab-pane").toggleClass("active");
+		//$(this).toggleClass("active");
+		$(".nav").children("li").toggleClass("active");
+		$(".tab-pane").toggleClass("active");
+		//$(this).toggleClass("active");
+		$(".nav").children("li").toggleClass("active");
 	});
 
 	function getDoughnut(){
@@ -238,6 +260,9 @@ $(document).ready(function() {
 
 				drawTable(commonTblText, "doughnutDataTable");
 				drawTable(commonTblTextF, "doughnutDataTableF");
+
+				$("#div_mainTab").show();
+				$(".noDataDisplay").hide();
 			},
 			error : function(data) {
 				console.log(data);
@@ -286,7 +311,7 @@ $(document).ready(function() {
 
 	function drawTable(commonTblTextVal, tblHandler){
 		//alert(commonTblTextF);
-		commonTblBodyText="<table class='doughnut-table-class table table-striped'><thead><tr><th>Building</th><th>Available</th><th>Booked</th><th></th><th></th></tr></thead>";
+		commonTblBodyText="<table class='doughnut-table-class table table-striped table-condensed table-hover'><thead><tr><th>Building</th><th>Available</th><th>Booked</th><th></th><th></th></tr></thead>";
 		commonTblBodyText+="<tbody>";
 		commonTblBodyText+=commonTblTextVal;
 		commonTblBodyText+="</tbody>";
@@ -377,7 +402,19 @@ $(document).ready(function() {
 
 	}
 
-	//$(".tab-content").children(".tab-pane[id='2']").show();
+	$(".tab-pane:first").addClass("active");
+
+	$(".nav").children("li").click(function(){
+		//$(".tab-pane").removeClass("active");
+
+		$(".tab-pane").toggleClass("active");
+		//$(this).toggleClass("active");
+		$(".nav").children("li").toggleClass("active");
+
+		//alert($(this).children("a").attr('href') + " and " +$("#" + $(this).children("a").attr('href').replace("#","")).length);
+		//$("#" + $(this).children("a").attr('href').replace("#","")).addClass("active");
+		//$()
+	});
 
 	function bookParkingSpace(result, btnHandlerValue, maleOrFemale, bookedOrFreed){
 		if(result){

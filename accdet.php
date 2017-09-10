@@ -49,7 +49,7 @@
 		<script src="lib/bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
 		<script src="js/main.js"></script>
 	</head>
-	<body class="fluid-container">
+	<body class="fluid-container body-class">
 		<?php
 			include("ps_main_header.php");
 		?>
@@ -93,6 +93,9 @@
 		</div>
 		<div id="tempDiv">
 		</div>
+		<?php
+			include("psFooter.php");
+		?>
 	</body>
 </html>
 </html>

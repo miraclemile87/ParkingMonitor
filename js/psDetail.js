@@ -13,6 +13,39 @@ $(document).ready(function(){
 		onChangeCountry($(".country-opt-class").val());
 	}
 
+	$(".spn_delete_class").click(function(){
+		var urlDelete = "psDeleteDetails.php?" + $(this).parent("#deleteGridData").attr("class");
+
+		//alert();
+
+		$.ajax({
+			url : urlDelete,
+			type : "GET",
+			success : function(htmldata){
+
+				//alert("in here");
+
+				var msgDescription = '<div  style="margin-bottom: 6px; margin-top: 12px" class="alert alert-info fade in">';
+					msgDescription += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+				  	msgDescription += '<strong>' + htmldata + '</strong>';
+					msgDescription += '</div>';
+					msgDescription += '<script>$(".alert").fadeTo(2000, 500).slideUp(500, function(){';
+				    msgDescription += '$("#success-alert").alert("close");';
+					msgDescription += '});</script>';
+
+				//console.log(htmldata);
+				alert($("#div-status-message").length + " and " + msgDescription);
+				$("#div-status-message").html(msgDescription);
+			},
+			error : function(data) {
+				//console.log(data);
+				//alert(data);
+			}
+		});
+	});
+
+	
+
 	function updateState(){
 		$(".state-class-has-value").each(function(){
 			//alert();

@@ -3,7 +3,8 @@
 	//session_start();
 ?>
 <nav class="navbar">
-	<div class="container-fluid well well-sm" style="box-shadow: 0 3px 3px 0 rgba(50,50,50,0.4);background:white">
+	<div class="container-fluid" style="box-shadow: 0 3px 3px 0 rgba(50,50,50,0.4)">
+	<!--<div class="container-fluid well well-sm" style="box-shadow: 0 3px 3px 0 rgba(50,50,50,0.4);background:white">-->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 				<span class="sr-only">Toggle navigation</span>
@@ -18,6 +19,12 @@
 				<!--<li><a href="#">Help</a></li>-->
 			<!--<ul class="nav nav-pills navbar-right">-->
 				<!-- TD: active not working? -->
+				<?php
+					if(isset($_SESSION["USER_ROLE"])){
+						echo "<li><h5 class='bg-info' style='padding:21px; margin:0%; margin-right: 12px'>Hi, " . $_SESSION['USER_GIVE_NAME'] ."</h5></li>";
+					}
+				?>
+				
 				<li><a href="dashboard.php">DASHBOARD</a></li>
 				<?php
 					//echo 'hi ' . $_SESSION["USER_ROLE"];
@@ -34,11 +41,11 @@
 				<li>
 				<?php if(isset($_SESSION["USER_ROLE"])){
 					?>
-					<a id="a_login" class="btnSimple" href="logoutsession.php" style="color: white; margin-right: 6px; margin-left: 6px; font-size: 14px"><span class="glyphicon glyphicon-log-out"></span> LOGOUT</a>
+					<a id="a_login" class="btnSimple" href="logoutsession.php" style="border-radius: 6px; color: white;  margin-bottom:6px; font-size: 13px"><span class="glyphicon glyphicon-log-out"></span> LOG OUT</a>
 					<?php
 					}else{
 					?>
-					<a id="a_login" class="btnSimple" href="index.php" style="color: white; margin-right: 6px; margin-left: 6px; font-size: 14px"><span class="glyphicon glyphicon-log-in"></span> LOGIN</a>
+					<a id="a_login" class="btnSimple" href="index.php" style="border-radius: 6px; color: white; margin-bottom:6px; font-size: 13px; padding: 0px;"><span class="glyphicon glyphicon-log-in"></span> LOGIN</a>
 					<?php
 					}
 				?>
@@ -47,8 +54,3 @@
 		</div>
 	</div>
 </nav>
-<script>
-	/*$(document).ready(function(){
-		$(".main-head-country-opt-class").msDropdown();
-	});*/
-</script>

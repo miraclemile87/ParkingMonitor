@@ -22,7 +22,7 @@
 			$dbInsReturnResult = mysql_query($sqlInsert, $conn);
 
 			if(!$dbInsReturnResult){
-				die("Something went wrong while booking a parking" . mysql_error() . ' and '. $sqlInsert);
+				die("Something went wrong while booking a parking" . mysql_error());
 			}
 		}
 
