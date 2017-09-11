@@ -40,7 +40,8 @@
 			<div class="col-md-10 col-md-offset-1" id="div_dashboardPanel">
 				<div class="panel panel-primary" style="box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);">
 					<div class="panel-heading">
-                    	<h3 class="panel-title">Dashboard</h3>
+                    	<h3 id='panelTitle' class="panel-title">Dashboard</h3>
+                    	<!--<h6 class="spn-date-class" id="span_dateText"></h6>-->
                 	</div>
                 	<div style='margin: 15px' align='center'>
 						<form role="form">
@@ -78,7 +79,7 @@
 									<!--<span id="btnDoughnutRefreshButton" class="btn btn-lg"><span class="glyphicon glyphicon-refresh" style="font-size: 24px; color: green"></span>Refresh</span>-->
 									 <button id="btnDoughnutRefreshButton" type="button" style="display:none" class="btn btn-success">
 							          	<span class="glyphicon glyphicon-refresh"></span> Refresh
-							        </button>
+							        </button>							        
 								</div>	
 
 							</div>

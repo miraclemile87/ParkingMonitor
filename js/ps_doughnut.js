@@ -8,6 +8,7 @@ $(document).ready(function() {
 	var commonBookedSlots = 0;
 
 	var titleText = "";
+	var dateText = "";
 
 	var commonTblText="";
 	var commonTblTextF="";
@@ -51,27 +52,38 @@ $(document).ready(function() {
 	$("#btnDoughnutButton").click(function(){
 		$("#btnDoughnutButton").attr("disabled", "true");
 		$("#btnDoughnutRefreshButton").show();
-		getDoughnut();
-		$(".tab-pane").toggleClass("active");
-		//$(this).toggleClass("active");
+
+		$(".tab-pane").each(function(){
+			if($(this).hasClass("active")){
+				if($(this).attr("id") == 1)
+					getDoughnut("M");
+				else
+					getDoughnut("F");
+			}
+		});
+		/*$(".tab-pane").toggleClass("active");
 		$(".nav").children("li").toggleClass("active");
 		$(".tab-pane").toggleClass("active");
-		//$(this).toggleClass("active");
-		$(".nav").children("li").toggleClass("active");
-		//getDoughnutF();
+		$(".nav").children("li").toggleClass("active");*/
+			//}
 	});
 
 	$("#btnDoughnutRefreshButton").click(function(){
-		getDoughnut();
-		$(".tab-pane").toggleClass("active");
-		//$(this).toggleClass("active");
+		$(".tab-pane").each(function(){
+			if($(this).hasClass("active")){
+				if($(this).attr("id") == 1)
+					getDoughnut("M");
+				else
+					getDoughnut("F");
+			}
+		});
+		/*$(".tab-pane").toggleClass("active");
 		$(".nav").children("li").toggleClass("active");
 		$(".tab-pane").toggleClass("active");
-		//$(this).toggleClass("active");
-		$(".nav").children("li").toggleClass("active");
+		$(".nav").children("li").toggleClass("active");*/
 	});
 
-	function getDoughnut(){
+	function getDoughnut(gender){
 
 		commonTblText="";
 		commonTblTextF="";
@@ -120,100 +132,119 @@ $(document).ready(function() {
 
 				if(dataLength == 0){
 				}else{
-					titleText = data[0].BUILDING_NO + " - " + data[0].COMPANY_NAME + ", " + data[0].COMPANY_LOCATION + ", " + data[0].COMPANY_LANDMARK;
+					titleText = data[0].COMPANY_NAME + ", " + data[0].COMPANY_LOCATION;
+					
+					var curDate = new Date();
+					dateText = curDate.getDate() + "-" + (curDate.getMonth()+1) + "-" + curDate.getFullYear();
+					dateText += " : " + curDate.getHours() + "." + curDate.getMinutes() + "." + curDate.getSeconds();
+
+					$("#panelTitle").html("Dashboard &nbsp;&nbsp; <b style='color: #dff0d8; font-size: 12px'>" + dateText + "</b>");
+					//$("#span_dateText").show();
+
+					//titleText += "(&lt;b&gt;" + dateText + "&lt;/b&gt;)";
+
 					if(dataLength == 0){
 
 					}else{
 						for (var itr = 0, colorItr = 0; itr < dataLength; itr++, colorItr++) {
 
-							commonBookedSlots+=data[itr].COMMON_PARKINGS_BOOKED;
+							if(gender == "M"){
 
-							doughnutContextArray.push(data[itr].BUILDING_NO);
-							//$("#doughnutCanvasContainer").append('<canvas id="' + data[itr].BUILDING_NO + '" width="400" height="400"></canvas>');
+								commonBookedSlots+=data[itr].COMMON_PARKINGS_BOOKED;
 
-							labelText.push("Building - " + data[itr].BUILDING_NO);
-							createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
-							commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
+								doughnutContextArray.push(data[itr].BUILDING_NO);
+								//$("#doughnutCanvasContainer").append('<canvas id="' + data[itr].BUILDING_NO + '" width="400" height="400"></canvas>');
 
-							totalBooked+= parseInt(data[itr].COMMON_PARKINGS_BOOKED);
+								labelText.push("Building - " + data[itr].BUILDING_NO);
+								createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
+								commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
 
-							if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
-								createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
-								labelTextF.push("Building - " + data[itr].BUILDING_NO);
-								//labelTextF.push("Booked (Building - " + data[itr].BUILDING_NO + ")");
-								
-								female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
-								//female_DatasetValues.push(data[itr].FEMALE_PARKINGS_BOOKED);
-								
-								backgroundColorValuesF.push(backgroundColorArray[itr]);
-								/*if(backgroundColorFilledArray.length <= colorItr){
-									colorItr=0;
-								}*/
-								
-								borderColorValuesF.push(borderColorArray[itr]);
-								//backgroundColorValuesF.push(backgroundColorFilledArray[colorItr]);
-								
-								borderWidthValuesF.push(1);
-								//borderWidthValuesF.push(1);
+								totalBooked+= parseInt(data[itr].COMMON_PARKINGS_BOOKED);
 
-								totalBookedF+= parseInt(data[itr].FEMALE_PARKINGS_BOOKED);
+								backgroundColorValues.push(backgroundColorArray[itr]);
+								borderColorValues.push(borderColorArray[itr]);
+								borderWidthValues.push(1);
+							}else{
+								if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
+									createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
+									labelTextF.push("Building - " + data[itr].BUILDING_NO);
+									//labelTextF.push("Booked (Building - " + data[itr].BUILDING_NO + ")");
+									
+									female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
+									//female_DatasetValues.push(data[itr].FEMALE_PARKINGS_BOOKED);
+									
+									backgroundColorValuesF.push(backgroundColorArray[itr]);
+									/*if(backgroundColorFilledArray.length <= colorItr){
+										colorItr=0;
+									}*/
+									
+									borderColorValuesF.push(borderColorArray[itr]);
+									//backgroundColorValuesF.push(backgroundColorFilledArray[colorItr]);
+									
+									borderWidthValuesF.push(1);
+									//borderWidthValuesF.push(1);
+
+									totalBookedF+= parseInt(data[itr].FEMALE_PARKINGS_BOOKED);
+								}
 							}
-
-							backgroundColorValues.push(backgroundColorArray[itr]);
-							borderColorValues.push(borderColorArray[itr]);
-							borderWidthValues.push(1);
+							
 						}
 
 						//labelText.push("Total Booked");
 						//commOn_DatasetValues.push(commonBookedSlots);
 						//female_DatasetValues.push(data[itr].FEMALE_PARKINGS_AVAILABLE);
 						//console.log(backgroundColorArray[itr]);
-						commOn_DatasetValues.push(totalBooked);
-						labelText.push("Total Booked");
-						backgroundColorValues.push(bookedColor);
-						backgroundColorValues.push(backgroundColorFilledArray[0]);
-						borderColorValues.push(bookedColor);
-						borderColorValues.push(backgroundColorFilledArray[0]);
-						borderWidthValues.push(1);
-						borderWidthValues.push(1);
-
-						labelTextF.push("Total Booked");
-						female_DatasetValues.push(totalBookedF);
-						backgroundColorValuesF.push(backgroundColorFilledArray[0]);
-						borderColorValuesF.push(backgroundColorFilledArray[0]);
-						borderWidthValuesF.push(1);
-
-
+						if(gender == "M"){
+							commOn_DatasetValues.push(totalBooked);
+							labelText.push("Total Booked");
+							backgroundColorValues.push(bookedColor);
+							backgroundColorValues.push(backgroundColorFilledArray[0]);
+							borderColorValues.push(bookedColor);
+							borderColorValues.push(backgroundColorFilledArray[0]);
+							borderWidthValues.push(1);
+							borderWidthValues.push(1);
+						}else{
+							labelTextF.push("Total Booked");
+							female_DatasetValues.push(totalBookedF);
+							backgroundColorValuesF.push(backgroundColorFilledArray[0]);
+							borderColorValuesF.push(backgroundColorFilledArray[0]);
+							borderWidthValuesF.push(1);
+						}
 					}
 				}
 
-				var tmpDoughnutData = {
-					//labels : doughnutLabel,
-					labels : labelText,
-					datasets : [
-						{
-							label : "ABC",//data[itr].BUILDING_NO + "<br/>" + data[itr].COMPANY_NAME + ", " + data[itr].COMPANY_LOCATION + "<br/>" + data[itr].COMPANY_LANDMARK,
-							data : commOn_DatasetValues,
-							backgroundColor : backgroundColorValues,
-			                borderColor : borderColorValues,
-			                borderWidth : borderWidthValues
-						}
-					]
-				};
+				var tmpDoughnutData = {};
+				var tmpDoughnutDataF = {};
 
-				var tmpDoughnutDataF = {
+				if(gender == "M"){
+					tmpDoughnutData = {
+						//labels : doughnutLabel,
+						labels : labelText,
+						datasets : [
+							{
+								label : "ABC",//data[itr].BUILDING_NO + "<br/>" + data[itr].COMPANY_NAME + ", " + data[itr].COMPANY_LOCATION + "<br/>" + data[itr].COMPANY_LANDMARK,
+								data : commOn_DatasetValues,
+								backgroundColor : backgroundColorValues,
+				                borderColor : borderColorValues,
+				                borderWidth : borderWidthValues
+							}
+						]
+					};
+				}else{
+					tmpDoughnutDataF = {
 					//labels : doughnutLabel,
-					labels : labelTextF,
-					datasets : [
-						{
-							label : "ABC",//data[itr].BUILDING_NO + "<br/>" + data[itr].COMPANY_NAME + ", " + data[itr].COMPANY_LOCATION + "<br/>" + data[itr].COMPANY_LANDMARK,
-							data : female_DatasetValues,
-							backgroundColor : backgroundColorValuesF,
-			                borderColor : borderColorValuesF,
-			                borderWidth : borderWidthValuesF
-						}
-					]
-				};
+						labels : labelTextF,
+						datasets : [
+							{
+								label : "ABC",//data[itr].BUILDING_NO + "<br/>" + data[itr].COMPANY_NAME + ", " + data[itr].COMPANY_LOCATION + "<br/>" + data[itr].COMPANY_LANDMARK,
+								data : female_DatasetValues,
+								backgroundColor : backgroundColorValuesF,
+				                borderColor : borderColorValuesF,
+				                borderWidth : borderWidthValuesF
+							}
+						]
+					};
+				}
 
 				var tmpDoughnutOption = {
 					title : {
@@ -246,20 +277,23 @@ $(document).ready(function() {
 				//console.log($("#psParkingCanvas").length);
 				//console.log("-----");
 
-				var chart = new Chart( "psParkingCanvas", {
-					type : "doughnut",
-					data : doughnutData[0],
-					options : doughnutOption[0]
-				});
+				if(gender == "M"){
+					var chart = new Chart( "psParkingCanvas", {
+						type : "doughnut",
+						data : doughnutData[0],
+						options : doughnutOption[0]
+					});
 
-				var chart = new Chart( "psParkingCanvasF", {
-					type : "doughnut",
-					data : tmpDoughnutDataF,
-					options : doughnutOption[0]
-				});
+					drawTable(commonTblText, "doughnutDataTable");
+				}else{
+					var chart = new Chart( "psParkingCanvasF", {
+						type : "doughnut",
+						data : tmpDoughnutDataF,
+						options : doughnutOption[0]
+					});
 
-				drawTable(commonTblText, "doughnutDataTable");
-				drawTable(commonTblTextF, "doughnutDataTableF");
+					drawTable(commonTblTextF, "doughnutDataTableF");
+				}
 
 				$("#div_mainTab").show();
 				$(".noDataDisplay").hide();
@@ -405,15 +439,17 @@ $(document).ready(function() {
 	$(".tab-pane:first").addClass("active");
 
 	$(".nav").children("li").click(function(){
-		//$(".tab-pane").removeClass("active");
+		/*$(".tab-pane").toggleClass("active");
+		$(".nav").children("li").toggleClass("active");*/
 
-		$(".tab-pane").toggleClass("active");
-		//$(this).toggleClass("active");
-		$(".nav").children("li").toggleClass("active");
+		//alert($(this).children("a").attr("href").replace("#",''));
 
-		//alert($(this).children("a").attr('href') + " and " +$("#" + $(this).children("a").attr('href').replace("#","")).length);
-		//$("#" + $(this).children("a").attr('href').replace("#","")).addClass("active");
-		//$()
+		var genderId = $(this).children("a").attr("href").replace("#",'');
+		if(genderId == 1){
+			getDoughnut("M");
+		}else{
+			getDoughnut("F");
+		}
 	});
 
 	function bookParkingSpace(result, btnHandlerValue, maleOrFemale, bookedOrFreed){
@@ -432,7 +468,14 @@ $(document).ready(function() {
 					//alert("done " + htmldata);
 					//console.log(htmldata);
 					//location.reload();
-					getDoughnut();
+					$(".tab-pane").each(function(){
+						if($(this).hasClass("active")){
+							if($(this).attr("id") == 1)
+								getDoughnut("M");
+							else
+								getDoughnut("F");
+						}
+					});
 				},
 				error : function(data) {
 					console.log(data);

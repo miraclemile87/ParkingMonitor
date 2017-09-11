@@ -1,4 +1,26 @@
 $(document).ready(function(){
+
+	$("#spn-uname-availability").click(function(){
+		var uname = $(".uname-class").val();
+		var urlUserFetch = "psCheckUser.php?uname=" + uname;
+
+		$.ajax({
+			url : urlUserFetch,
+			type : "GET",
+			success : function(htmldata){
+				alert(htmldata);
+				if(htmldata == 0)
+					$("#spn-uname-availability-message").html("<i style='color:green'>Available</i>");
+				else
+					$("#spn-uname-availability-message").html("<i style='color:red'>Not Available</i>");
+			},
+			error : function(data) {
+				//console.log(data);
+				//alert(data);
+			}
+		});
+	});
+
 	$(".spnAddDetails_class").click(function(){
 
 		$("#tempDiv").html("<form id='frmSubmitForm' action='psAddDetails.php'><input type='hidden' name='gid' value='" + $(this).attr('id').replace("spnAddDetails_","") + "'/><input type='hidden' name='gnm' value='" + $(this).attr('name').replace("spnAddDetails_","") + "'/></form>");

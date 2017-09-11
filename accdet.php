@@ -94,7 +94,7 @@
 		<div id="tempDiv">
 		</div>
 		<?php
-			include("psFooter.php");
+			//include("psFooter.php");
 		?>
 	</body>
 </html>

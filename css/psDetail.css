@@ -21,7 +21,12 @@ label{
 
 .tblViewDetail{
 	font-size: 12px;
-	font-family: Arial
+	font-family: Arial;
+	//table-layout: fixed;
+}
+
+#div_vieWdetails{
+	//overflow-x: scroll;
 }
 
 .tblViewDetail td{
@@ -46,4 +51,28 @@ label{
 .spnDetails_class{
 	float: right;
 	color: #4cae4c;
+}
+
+#spn-uname-availability{
+	color: blue;
+	font-size: 13px;
+	font-family: Cambria;
+	font-weight: bold;
+}
+
+#spn-uname-availability:hover{
+	cursor: pointer;
+}
+
+#div_addDetails{
+	margin-left: 12px;
+	margin-right: 12px;
+}
+
+#spn-uname-availability-message{
+	//color: green;
+	font-size: 14px;
+	font-family: Cambria;
+	font-weight: bold;
+	float: right;
 }
