@@ -30,7 +30,7 @@
 			$_SESSION['USER_NAME'] = $myusername;
 			header("location: parkingspaces.php");
 		}else {
-			$error = "**Invalid Login or Password";
+			$error = "***Invalid Login or Password";
 		}
 	}
 ?>
