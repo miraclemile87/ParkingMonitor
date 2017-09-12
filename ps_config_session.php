@@ -1,7 +1,7 @@
 <?php
    $dbhost = 'localhost';
-   $dbuser = 'adminBlSbkcT';
-   $dbpass = 'Lw3gBDAED8pG';
+   $dbuser = 'userQC2';
+   $dbpass = 'jjqHxbBofcm27ujj';
    $dbname = 'ps_parkingspace';
 
    $conn = mysql_connect($dbhost, $dbuser, $dbpass);
