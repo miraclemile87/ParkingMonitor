@@ -45,7 +45,7 @@
 					<?php
 					}else{
 					?>
-					<a id="a_login" class="btnSimple" href="index.php" style="border-radius: 6px; color: white; margin-bottom:6px; font-size: 13px; padding: 0px;"><span class="glyphicon glyphicon-log-in"></span> LOGIN</a>
+					<a id="a_login" class="btnSimple" href="index.php" style="border-radius: 6px; color: white; margin-bottom:6px; font-size: 13px"><span class="glyphicon glyphicon-log-in"></span> LOGIN</a>
 					<?php
 					}
 				?>

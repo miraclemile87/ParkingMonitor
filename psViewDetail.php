@@ -52,7 +52,7 @@
 					</span>
 					<form role="form" name="frm_ViewDetails" action="" method="post">
 						<div class="form-group">
-							<table class="table table-striped tblViewDetail">
+							<table class="table table-striped table-responsive tblViewDetail">
 							<?php
 								$qry_fetchDetails = "SELECT `PS_PARKINGSPACE_GRID_ID`, `PS_PARKINGSPACE_GRID_NAME`, `PS_PARKINGSPACE_GRID_TABLE_NAME`, `PS_PARKINGSPACE_GRID_HEADER`, `PS_PARKINGSPACE_GRID_QUERY`,	`PS_PARKINGSPACE_GRID_QUERY_HEADER`, `PS_PARKINGSPACE_GRID_PID`, `PS_PARKINGSPACE_GRID_HID`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL`, `PS_PARKINGSPACE_GRID_DANGER_ALERT_COL_VALUE`, `PS_PARKINGSPACE_GRID_IS_EDITABLE`, `PS_PARKINGSPACE_GRID_IS_DELETABLE` FROM `ps_parkingspace_grid` where PS_PARKINGSPACE_GRID_ID = " . $gridId;
 								

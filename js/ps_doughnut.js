@@ -93,9 +93,12 @@ $(document).ready(function() {
 		$("#psParkingCanvasF").empty();
 		$("#doughnutDataTableF").empty();
 
+		var xmlhttp;
+
 		var urlData = "psDoughnutData.php?cntr=" + $("#selCountry").val() + "&cmpn=" + $("#selCompany").val();
 		//alert(urlData);
 		$.ajax({
+			async: false,
 			url : urlData,
 			type : "GET",
 			success : function(data){
@@ -460,6 +463,7 @@ $(document).ready(function() {
 			var handlerValue = btnHandlerValue;
 
 			$.ajax({
+				async: false,
 				url : "ps_updateParkingData.php",
 				type : "POST",
 				data: "CMPNY_BLDG_ID="+handlerValue+"&mORf="+maleOrFemale+"&aORd="+bookedOrFreed,

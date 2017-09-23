@@ -19,10 +19,10 @@
 		</title>
 		<script src="lib/Chart.min.js"></script>
 		<script src="lib/jquery-1.12.0.min.js"></script>
-		<script src="js/msdropdown/jquery.dd.min.js" type="text/javascript"></script>
+		<!--<script src="js/msdropdown/jquery.dd.min.js" type="text/javascript"></script>
 		<link rel="stylesheet" type="text/css" href="css/msdropdown/dd.css" />
 		<link rel="stylesheet" type="text/css" href="css/msdropdown/skin2.css" />
-		<link rel="stylesheet" type="text/css" href="css/msdropdown/flags.css" />
+		<link rel="stylesheet" type="text/css" href="css/msdropdown/flags.css" />-->
 		<link rel="stylesheet" href="lib/bootstrap-3.3.6-dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="lib/bootstrap-3.3.6-dist/css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/dashboard.css">
