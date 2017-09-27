@@ -13,8 +13,47 @@ $(document).ready(function() {
 	var commonTblText="";
 	var commonTblTextF="";
 
+	var mClicked = 0;
+	var fClicked = 0;
+
+	var isPMCol = 0;
+
+	var lastClick = 1;
+
+	function checkIfLoadedAgain(){
+		if($("#selCountryValue").val() != -99){
+			//alert($("#selCountryValue").val());
+			$("#selCountry").val($("#selCountryValue").val());
+
+			$.ajax({
+				url : "ps_parkingData.php",
+				type : "POST",
+				data: "CNTRY="+$("#selCountryValue").val(),
+				success : function(htmldata){
+					$("#selCompany").html(htmldata);
+					if($("#selCompanyValue").val() != -99){
+						$("#selCompany").val($("#selCompanyValue").val());
+						//$("#btnDoughnutRefreshButton").show();
+						getDoughnut(((lastClick==1)?"M":"F"));
+						if(lastClick==1){
+							mClicked = 1;
+						}else{
+							fClicked = 1;
+						}
+					}
+				},
+				error : function(data) {
+					console.log(data);
+				},
+				async: false
+			});
+		}
+	}
+
+	checkIfLoadedAgain();
+
 	function getAddButton(uniqueId){
-		var addButtonText='<button id="' + uniqueId + '" type="button" class="addButtonClass btn btn-success">';
+		var addButtonText='&nbsp;&nbsp;<button id="' + uniqueId + '" type="button" class="addButtonClass btn btn-success">';
 	    addButtonText+='<span class="glyphicon glyphicon-plus-sign"></span>';
 	    addButtonText+='</button>';
 
@@ -22,15 +61,27 @@ $(document).ready(function() {
 	}
 
 	function getDeleteButton(uniqueId){
-    	var delButtonText='<button id="' + uniqueId + '" type="button" class="delButtonClass btn btn-danger">';
+    	var delButtonText='&nbsp;&nbsp;<button id="' + uniqueId + '" type="button" class="delButtonClass btn btn-danger">';
     	delButtonText+='<span class="glyphicon glyphicon-minus-sign"></span>';
     	delButtonText+='</button>';
 
     	return delButtonText;
 	}
 
+	function loadRefresh(){
+		//alert();
+		$("lClickedValue").val(lastClick);
+		$("#frm_Dashboard").submit();
+	}
+
+
 	$("#btnDoughnutButton").attr("disabled", "true");
-	$("#btnDoughnutRefreshButton").hide();
+	if($("#selCountryValue").val() != -99){
+		$("#btnDoughnutRefreshButton").show();
+	}else{
+		$("#btnDoughnutRefreshButton").hide();
+		$(".tab-pane:first").addClass("active");
+	}
 
 	$(".selectDBClass").change(function(){
 		var enableButton = true;
@@ -49,22 +100,115 @@ $(document).ready(function() {
 		}
 	});
 
+	
+
+	/*$(".nav").children("li").click(function(){
+		//$(".tab-pane").toggleClass("active");
+		//$(".nav").children("li").toggleClass("active");
+
+		//alert($(this).children("a").attr("href").replace("#",''));
+
+		var genderId = $(this).children("a").attr("href").replace("#",'');
+		if(genderId == 1){
+			getDoughnut("M");
+		}else{
+			getDoughnut("F");
+		}
+	});*/
+
+	$(".mTab").click(function(event){
+		
+		$(".tab-pane").each(function(){
+			$(this).removeClass("active");
+			$(".fTab").removeClass("active");
+		});
+		//alert(lastClick + " and " + mClicked);
+		if(lastClick != 1 && mClicked == 1){
+			loadRefresh();
+			//$(".tab-pane").toggleClass("active");
+			//$(".nav").children("li").toggleClass("active");
+			//event.stopImmediatePropagation();
+		}else{
+			getDoughnut("M");
+			$(".tab-pane[id=2]").addClass("active");
+			//$(".nav").children("li").toggleClass("active");
+			$(this).addClass("active");
+			lastClick = 1;
+			mClicked = 1;
+		}
+	});
+
+	$(".fTab").click(function(event){
+
+		$(".tab-pane").each(function(){
+			$(this).removeClass("active");
+			$(".mTab").removeClass("active");
+		});
+
+		//alert();
+		
+		//alert(lastClick + " and " + fClicked);
+		if(lastClick != 2 && fClicked == 1){
+			loadRefresh();
+			//event.stopImmediatePropagation();		
+		}else{
+			getDoughnut("F");
+			$(".tab-pane[id=2]").addClass("active");
+			//$(".nav").children("li").toggleClass("active");
+			$(this).addClass("active");
+			lastClick = 2;
+			fClicked = 1;
+		}
+	});
+
+	/*$(".mTab, .fTab").click(function(){
+		//alert();
+		
+		$(".tab-pane").each(function(){
+			alert(1);
+			if($(this).hasClass("active")){
+				alert(2 + " and " + $(this).attr("id"));
+				if($(this).attr("id") == 1){
+					//alert(mClicked);
+					if(lastClick != $(this).attr("id") && mClicked == 1){
+						alert();
+					}else{
+						getDoughnut("M");
+						lastClick = $(this).attr("id");
+						mClicked = 1;
+					}		
+				}
+				else{
+					if(lastClick != $(this).attr("id") && fClicked == 1){
+						alert();
+					}else{
+						lastClick = $(this).attr("id");
+						fClicked = 1;
+					}	
+				}
+			}
+		});
+	})*/
+
 	$("#btnDoughnutButton").click(function(){
 		$("#btnDoughnutButton").attr("disabled", "true");
 		$("#btnDoughnutRefreshButton").show();
 
 		$(".tab-pane").each(function(){
 			if($(this).hasClass("active")){
-				if($(this).attr("id") == 1)
-					getDoughnut("M");
-				else
+				if($(this).attr("id") == 1){
+					//alert(mClicked);
+					getDoughnut("M");					
+				}
+				else{
 					getDoughnut("F");
+				}
 			}
 		});
 		/*$(".tab-pane").toggleClass("active");
-		$(".nav").children("li").toggleClass("active");
-		$(".tab-pane").toggleClass("active");
 		$(".nav").children("li").toggleClass("active");*/
+		//$(".tab-pane").toggleClass("active");
+		/*$(".nav").children("li").toggleClass("active");*/
 			//}
 	});
 
@@ -102,7 +246,7 @@ $(document).ready(function() {
 			url : urlData,
 			type : "GET",
 			success : function(data){
-				console.log(data);
+				//alert(data);
 
 				//data = [{"company_ID":"1","building_ID":"1","COMPANY_BUILDING_ID":"1","BUILDING_NO":"B01","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"90","COMMON_PARKINGS_BOOKED":"10","FEMALE_PARKINGS_TOTAL":"0","FEMALE_PARKINGS_AVAILABLE":"0","FEMALE_PARKINGS_BOOKED":"0"},{"company_ID":"1","building_ID":"2","COMPANY_BUILDING_ID":"2","BUILDING_NO":"B02","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"100","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"50","FEMALE_PARKINGS_TOTAL":"30","FEMALE_PARKINGS_AVAILABLE":"10","FEMALE_PARKINGS_BOOKED":"20"},{"company_ID":"1","building_ID":"3","COMPANY_BUILDING_ID":"3","BUILDING_NO":"B03","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"120","COMMON_PARKINGS_AVAILABLE":"50","COMMON_PARKINGS_BOOKED":"70","FEMALE_PARKINGS_TOTAL":"40","FEMALE_PARKINGS_AVAILABLE":"20","FEMALE_PARKINGS_BOOKED":"20"},{"company_ID":"1","building_ID":"4","COMPANY_BUILDING_ID":"4","BUILDING_NO":"B04","COMPANY_NAME":"Bumble Bee","COMPANY_LOCATION":"Pune, Maharashtra, India","COMPANY_LANDMARK":"","COMMON_PARKINGS_TOTAL":"50","COMMON_PARKINGS_AVAILABLE":"30","COMMON_PARKINGS_BOOKED":"20","FEMALE_PARKINGS_TOTAL":"25","FEMALE_PARKINGS_AVAILABLE":"5","FEMALE_PARKINGS_BOOKED":"20"}];
 
@@ -159,7 +303,7 @@ $(document).ready(function() {
 								//$("#doughnutCanvasContainer").append('<canvas id="' + data[itr].BUILDING_NO + '" width="400" height="400"></canvas>');
 
 								labelText.push("Building - " + data[itr].BUILDING_NO);
-								createTable(data[itr].BUILDING_NO, data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
+								createTable(data[itr].BUILDING_NO + " (" + data[itr].COMMON_TIMING + ")", data[itr].COMMON_PARKINGS_TOTAL, data[itr].COMMON_PARKINGS_AVAILABLE, data[itr].COMMON_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID, data[itr].IS_PM);
 								commOn_DatasetValues.push(data[itr].COMMON_PARKINGS_AVAILABLE);
 
 								totalBooked+= parseInt(data[itr].COMMON_PARKINGS_BOOKED);
@@ -169,7 +313,7 @@ $(document).ready(function() {
 								borderWidthValues.push(1);
 							}else{
 								if(data[itr].FEMALE_PARKINGS_TOTAL != 0){
-									createTableF(data[itr].BUILDING_NO, data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID);
+									createTableF(data[itr].BUILDING_NO + " (" + data[itr].FEMALE_TIMING + ")", data[itr].FEMALE_PARKINGS_TOTAL, data[itr].FEMALE_PARKINGS_AVAILABLE, data[itr].FEMALE_PARKINGS_BOOKED, data[itr].COMPANY_BUILDING_ID, data[itr].IS_PM);
 									labelTextF.push("Building - " + data[itr].BUILDING_NO);
 									//labelTextF.push("Booked (Building - " + data[itr].BUILDING_NO + ")");
 									
@@ -300,25 +444,51 @@ $(document).ready(function() {
 
 				$("#div_mainTab").show();
 				$(".noDataDisplay").hide();
+
+				 $('html, body').animate({
+			        scrollTop: $("#div_dashboardPanel").offset().top
+			    }, 500);
 			},
 			error : function(data) {
 				console.log(data);
+				//alert(data);
 			}
 		});
 	}
 
-	function createTable(field1, field2, field3, field4, uniqueIdVal){
-		var addButtonText = getAddButton(uniqueIdVal);
-		var delButtonText = getDeleteButton(uniqueIdVal);
+	function createTable(field1, field2, field3, field4, uniqueIdVal, isPM){
+		var addButtonText = "";
+		if(isPM == "Y"){
+			addButtonText = getAddButton(uniqueIdVal);
+		}
+		var delButtonText = "";
+		if(isPM == "Y"){
+			delButtonText = getDeleteButton(uniqueIdVal);
+		}
 		//commonTblText+="<tr><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
-		commonTblText+="<tr><td>" + field1 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
+		commonTblText+="<tr><td>" + field1 + "</td><td>" + field3 + addButtonText + "</td><td>" + field4 + delButtonText + "</td>";
+		//if($("#inpRoU").val() == 4)
+		/*if(isPM == "Y"){
+			isPMCol = 1;
+			commonTblTextF+="<td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>";
+		}*/
 	}
 
-	function createTableF(field1, field2, field3, field4, uniqueIdVal){
-		var addButtonText = getAddButton(uniqueIdVal);
-		var delButtonText = getDeleteButton(uniqueIdVal);
+	function createTableF(field1, field2, field3, field4, uniqueIdVal, isPM){
+		var addButtonText = "";
+		if(isPM == "Y"){
+			addButtonText = getAddButton(uniqueIdVal);
+		}
+		var delButtonText = "";
+		if(isPM == "Y"){
+			delButtonText = getDeleteButton(uniqueIdVal);
+		}
 		//commonTblTextF+="<tr><td><span style='color: green' class='glyphicon glyphicon-plus-sign'></td><td>" + field1 + "</td><td>" + field2 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td><span style='color: red' class='glyphicon glyphicon-minus-sign'></td></tr>"
-		commonTblTextF+="<tr><td>" + field1 + "</td><td>" + field3 + "</td><td>" + field4 + "</td><td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>"
+		commonTblTextF+= "<tr><td>" + field1 + "</td><td>" + field3 + addButtonText + "</td><td>" + field4 + delButtonText + "</td>";
+		/*if(isPM == "Y"){
+			isPMCol = 1;
+			commonTblTextF+="<td>" + addButtonText + "</td><td>" + delButtonText + "</td></tr>";
+		}*/
 	}
 
 	/*function drawTable(){
@@ -348,7 +518,10 @@ $(document).ready(function() {
 
 	function drawTable(commonTblTextVal, tblHandler){
 		//alert(commonTblTextF);
-		commonTblBodyText="<table class='doughnut-table-class table table-striped table-condensed table-hover'><thead><tr><th>Building</th><th>Available</th><th>Booked</th><th></th><th></th></tr></thead>";
+		commonTblBodyText="<table class='doughnut-table-class table table-striped table-condensed table-hover'><thead><tr><th>Building</th><th>Available</th><th>Booked</th>";
+		if(isPMCol == "Y")
+			commonTblBodyText+="<th></th><th></th>";
+		commonTblBodyText+="</tr></thead>";
 		commonTblBodyText+="<tbody>";
 		commonTblBodyText+=commonTblTextVal;
 		commonTblBodyText+="</tbody>";
@@ -438,22 +611,6 @@ $(document).ready(function() {
 
 
 	}
-
-	$(".tab-pane:first").addClass("active");
-
-	$(".nav").children("li").click(function(){
-		/*$(".tab-pane").toggleClass("active");
-		$(".nav").children("li").toggleClass("active");*/
-
-		//alert($(this).children("a").attr("href").replace("#",''));
-
-		var genderId = $(this).children("a").attr("href").replace("#",'');
-		if(genderId == 1){
-			getDoughnut("M");
-		}else{
-			getDoughnut("F");
-		}
-	});
 
 	function bookParkingSpace(result, btnHandlerValue, maleOrFemale, bookedOrFreed){
 		if(result){

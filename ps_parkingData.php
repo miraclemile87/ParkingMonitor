@@ -1,5 +1,5 @@
 <?php
-	include("ps_valid_session.php");
+	//include("ps_valid_session.php");
 	include("ps_config_session.php");
 
 	//echo $_POST['CNTRY'];

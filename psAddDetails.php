@@ -407,8 +407,10 @@
 		    						?>
 			    						<select class="form-control tHourClass" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
 			    							<?php
-			    								$tHour=0;
-			    								for($tHour=0; $tHour <= 24; $tHour++){
+			    								$tHours=array('00','01','02','04','05','06','07','03','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23');
+
+			    								//for($tHour=0; $tHour <= 23; $tHour++){
+			    								foreach($tHours as $tHour){
 			    									?>
 			    									<option value="<?php echo $tHour; ?>" <?php if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $tHour){echo "selected";}?>><?php echo $tHour; ?></option>
 			    									<?php
@@ -423,8 +425,9 @@
 		    						?>
 			    						<select class="form-control tMinuteClass" id="elmId_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" name="elmName_<?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_NAME']; ?>" <?php echo $isRequired; ?> <?php echo $isEnabled; ?> placeholder="Enter <?php echo $addDetailsDBRow['PS_PARKINGSPACE_GRID_COLUMN_HEADER']; ?>">
 			    							<?php
-			    								$tMinute=0;
-			    								for($tMinute=0; $tMinute <= 60; $tMinute++){
+			    								$tMinutes=array('00','01','02','04','05','06','07','03','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59');
+			    								//for($tMinute=0; $tMinute <= 60; $tMinute++){
+			    								foreach($tMinutes as $tMinute){
 			    									?>
 			    									<option value="<?php echo $tMinute; ?>" <?php if($actionDetails == "E" && $editDataDBRow[$addDetailsDBRow["PS_PARKINGSPACE_GRID_COLUMN_NAME"]] == $tMinute){echo "selected";}?>><?php echo $tMinute; ?></option>
 			    									<?php

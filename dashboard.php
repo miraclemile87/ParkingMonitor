@@ -10,6 +10,18 @@
 	//$colorFGArray = array(#3c763d);
 	$colorArrayIterator=0;
 
+	$cntryVal=-99;
+	$cmpnyVal=-99;
+	$lastClicked=-99;
+
+	if($_SERVER["REQUEST_METHOD"] == "POST") {
+		if(isset($_POST['selCountry']))
+			$cntryVal = $_POST['selCountry'];
+		if(isset($_POST['selCompany']))
+			$cmpnyVal = $_POST['selCompany'];
+		if(isset($_POST['lClickedValue']))
+			$lastClicked=$_POST['lClickedValue'];
+	}
 	
 ?>
 <html>
@@ -37,17 +49,17 @@
 			include("ps_main_header.php");
 		?>
 		<div class="row rowClass">
-			<div class="col-md-10 col-md-offset-1" id="div_dashboardPanel">
+			<div class="col-md-12 col-md-offset-0" id="div_dashboardPanel">
 				<div class="panel panel-primary" style="box-shadow: 0px 0px 15px 3px rgba(0,0,0,0.15);">
 					<div class="panel-heading">
                     	<h3 id='panelTitle' class="panel-title">Dashboard</h3>
                     	<!--<h6 class="spn-date-class" id="span_dateText"></h6>-->
                 	</div>
                 	<div style='margin: 15px' align='center'>
-						<form role="form">
+						<form role="form" id="frm_Dashboard" name="frm_Dashboard" action="" method="post">
 							<div class="row" id="div_dashboardOptions">
 								<div class="col-md-3" id="divCountry">
-									<select id="selCountry" class="form-control selectDBClass" required>
+									<select id="selCountry" name="selCountry" class="form-control selectDBClass" required>
 										<option value="">Select Country</option>
 										<?php				
 											$qry_cntry='select id value, name text from ps_countries';
@@ -68,11 +80,14 @@
 											}
 										?>
 									</select>
+									<input type="hidden" id="selCountryValue" value="<?php echo $cntryVal; ?>" />
 								</div>
 								<div class="col-md-3 form-group" id="div_Company">
-									<select id="selCompany" class="form-control selectDBClass" required>
+									<select id="selCompany" name="selCompany" class="form-control selectDBClass" required>
 										<option value="" >Select Country First</option>
 									</select>
+									<input type="hidden" id="selCompanyValue" value="<?php echo $cmpnyVal; ?>" />
+									<input type="hidden" id="lClickedValue" name="lClickedValue" value="<?php echo $lastClicked; ?>" />
 								</div>
 								<div class="col-md-3" id="div_Submit">
 									<input type="button" id="btnDoughnutButton" class="btn btn-primary" value="GO"</input>
@@ -83,6 +98,7 @@
 								</div>	
 
 							</div>
+							<input type="hidden" id="inpRoU" value="<?php if(isset($_SESSION["USER_ROLE"])){echo $_SESSION["USER_ROLE"];}else echo -99;?>"/>
 						</form>
 					</div>
 					<div class="noDataDisplay">
@@ -117,9 +133,9 @@
                 	<div id="div_mainTab" style="display: none">
 						<ul class="nav nav-tabs">
 							<li class="active">
-								<a  href="#1" data-toggle="tab">Common</a>
+								<a  href="#1" class="mTab" data-toggle="tab">Common</a>
 							</li>
-							<li><a href="#2" data-toggle="tab">Female</a>
+							<li><a href="#2" class="fTab" data-toggle="tab">Female</a>
 							</li>
 						</ul>
 
@@ -129,6 +145,7 @@
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasDiv">
 										<canvas id="psParkingCanvas">
 										</canvas>
+										<input id="psParkingCanvasHeight" type="hidden"/>
 										<div id="doughnutDataTable">
 					 					</div>
 									</div>
@@ -139,6 +156,7 @@
 									<div style='width:"50%", height:"50%"' id="psParkingCanvasFDiv">
 										<canvas id="psParkingCanvasF">
 										</canvas>
+										<input id="psParkingCanvasFHeight" type="hidden"/>
 										<div id="doughnutDataTableF">
 										</div>
 									</div>

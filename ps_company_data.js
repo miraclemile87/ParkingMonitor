@@ -38,7 +38,7 @@ $("document").ready(function(){
 		}
 
 		xmlhttp.open("POST",url,true);
-		//xmlhttp.responseType("text");
+		xmlhttp.responseType("text");
 		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xmlhttp.send(dataParam);	
 

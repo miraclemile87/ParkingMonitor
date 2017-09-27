@@ -8,7 +8,7 @@ $(document).ready(function(){
 			url : urlUserFetch,
 			type : "GET",
 			success : function(htmldata){
-				alert(htmldata);
+				//alert(htmldata);
 				if(htmldata == 0)
 					$("#spn-uname-availability-message").html("<i style='color:green'>Available</i>");
 				else
@@ -49,14 +49,14 @@ $(document).ready(function(){
 
 				var msgDescription = '<div  style="margin-bottom: 6px; margin-top: 12px" class="alert alert-info fade in">';
 					msgDescription += '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-				  	msgDescription += '<strong>' + htmldata + '</strong>';
+				  	msgDescription += '<strong>' + htmldata + '</strong> Refreshing ..';
 					msgDescription += '</div>';
-					msgDescription += '<script>$(".alert").fadeTo(2000, 500).slideUp(500, function(){';
-				    msgDescription += '$("#success-alert").alert("close");';
+					msgDescription += '<script>$(".alert").fadeTo(1000, 500).slideUp(500, function(){';
+				    msgDescription += '$("#success-alert").alert("close");location.reload();';
 					msgDescription += '});</script>';
 
 				//console.log(htmldata);
-				alert($("#div-status-message").length + " and " + msgDescription);
+				//alert($("#div-status-message").length + " and " + msgDescription);
 				$("#div-status-message").html(msgDescription);
 			},
 			error : function(data) {

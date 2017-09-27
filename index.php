@@ -1,5 +1,6 @@
 <?php
 	include("ps_config_session.php");
+	require "ps_password_compat.php";
 	
 	$error = "";
 	$success = "";
@@ -24,7 +25,7 @@
 		$globalUserName = $myusername;
 		$mypassword_orig = $_POST['txtLogInPassword'];
 
-		$mypassword = strrev(password_hash($mypassword_orig, PASSWORD_DEFAULT));
+		$mypassword = strrev(password_hash($mypassword_orig, PASSWORD_BCRYPT));
 
 		if(isset($_POST['txtLogInChangePassword'])){
 			if(isset($_POST['txtLogInRepeatPassword'])){
@@ -32,7 +33,7 @@
 				if($_POST['txtLogInChangePassword'] != $_POST['txtLogInRepeatPassword']){
 					$error = "**2 new passwords do not match";
 				}else{
-					$sql = "SELECT user_id, user_role, user_given_name, user_password, user_temp_password, case when now() > USER_TEMP_PASSWORD_EXPIRATION_DATE then 1 else 0 end user_temp_password_expired from ps_parkingspace_users WHERE user_name = '" . $myusername. "'";
+					$sql = "SELECT user_id, user_role, user_given_name, user_password, user_temp_password, case when now() > USER_TEMP_PASSWORD_EXPIRATION_DATE then 1 else 0 end user_temp_password_expired from ps_parkingspace_users WHERE user_name = '" . $myusername. "' and end_date is null";
 			
 				mysql_select_db($dbname);
 				$retval = mysql_query( $sql, $conn );
@@ -47,7 +48,7 @@
 				if($count == 1) {
 					if(password_verify($mypassword_orig, strrev($row[4]))){
 
-						$mynewpassword = strrev(password_hash($_POST['txtLogInRepeatPassword'], PASSWORD_DEFAULT));
+						$mynewpassword = strrev(password_hash($_POST['txtLogInRepeatPassword'], PASSWORD_BCRYPT));
 
 						$updateUserSql = "update ps_parkingspace_users set user_temp_password = null, USER_TEMP_PASSWORD_EXPIRATION_DATE = null, modification_date = now(), user_password = '" . $mynewpassword . "' where user_name = '" . $myusername. "'";
 
